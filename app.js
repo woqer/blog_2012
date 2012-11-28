@@ -8,7 +8,8 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
-  , partials = require('express-partials');
+  , partials = require('express-partials')
+  , postController = require('./routes/post_controller.js');
 
 var app = express();
 
@@ -32,8 +33,22 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+//-- Routes
+
 app.get('/', routes.index);
 app.get('/users', user.list);
+
+//---------------------
+
+app.get('/posts', postController.index);
+app.get('/posts/new', postController.new);
+app.get('/posts/:postid([0-9]+)', postController.show);
+app.post('/posts', postController.create);
+app.get('/posts/:postid([0-9]+)/edit', postController.edit);
+app.put('/posts/:postid([0-9]+)', postController.update);
+app.delete('/posts/:postid([0-9]+)', postController.destroy);
+
+//---------------------
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
