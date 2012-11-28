@@ -2,7 +2,13 @@
 
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('blog', 'core', 'core');
+// Para usar MySQL:
+// var sequelize = new Sequelize('blog', 'core', 'core');
+
+// Para usar SQLite:
+var sequelize = new Sequelize('blog', 'core', null, 
+			      {dialect: "sqlite",
+			       storage: "db/post.sqlite"});
 
 // Campos de los posts.
 var Post = sequelize.define('Post',

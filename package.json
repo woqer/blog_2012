@@ -9,6 +9,7 @@
     "express": "3.0.3",
     "ejs": "*",
     "express-partials": "*",
+    "sqlite3": ">=2.0.0",
     "sequelize": "1.6.0-beta4"
   }
 }
