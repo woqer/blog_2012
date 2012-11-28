@@ -7,9 +7,12 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , partials = require('express-partials');
 
 var app = express();
+
+app.use(partials());
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
