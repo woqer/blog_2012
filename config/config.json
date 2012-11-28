@@ -1,0 +1,6 @@
+{
+    "username":"core",
+    "password":"core",
+    "database":"blog",
+    "host":"127.0.0.1"
+}

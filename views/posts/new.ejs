@@ -1,0 +1,13 @@
+<h1>Nuevo Post</h1>
+
+<form method='post' action='/posts'>
+
+  <!-- Bug en la version 0.0.6 de express-partials -->
+  <!-- %- partial('form') % -->
+
+  <%- include _form.ejs %>
+
+</form>
+
+
+<a href="/posts"> Volver  </a>
