@@ -14,6 +14,7 @@ exports.load = function(req, res, next, id) {
                 req.post = post;
 		next();
             } else {
+		req.flash('error', 'No existe el post con id='+id+'.');
                 next('No existe el post con id='+id+'.');
             }
         })
@@ -69,13 +70,20 @@ exports.create = function(req, res, next) {
     
     var validate_errors = post.validate();
     if (validate_errors) {
-        console.log("Errores de validacion:", validate_errors);
+        console.log("Errores de validación:", validate_errors);
+
+        req.flash('error', 'Los datos del formulario son incorrectos.');
+        for (var err in validate_errors) {
+           req.flash('error', validate_errors[err]);
+        };
+
         res.render('posts/new', {post: post});
         return;
     } 
     
     post.save()
         .success(function() {
+            req.flash('success', 'Post creado con éxito.');
             res.redirect('/posts');
         })
         .error(function(error) {
@@ -97,13 +105,20 @@ exports.update = function(req, res, next) {
                 
     var validate_errors = req.post.validate();
     if (validate_errors) {
-        console.log("Errores de validacion:", validate_errors);
+        console.log("Errores de validación:", validate_errors);
+
+        req.flash('error', 'Los datos del formulario son incorrectos.');
+        for (var err in validate_errors) {
+            req.flash('error', validate_errors[err]);
+        };
+
         res.render('posts/edit', {post: req.post});
         return;
     } 
     req.post.updateAttributes({ title: req.post.title,
                                 body:  req.post.body })
         .success(function() {
+            req.flash('success', 'Post actualizado con éxito.');
             res.redirect('/posts');
         })
         .error(function(error) {
@@ -116,6 +131,7 @@ exports.destroy = function(req, res, next) {
 
     req.post.destroy()
         .success(function() {
+            req.flash('success', 'Post eliminado con éxito.');
             res.redirect('/posts');
         })
         .error(function(error) {
