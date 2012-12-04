@@ -77,7 +77,8 @@ exports.create = function(req, res, next) {
            req.flash('error', validate_errors[err]);
         };
 
-        res.render('posts/new', {post: post});
+        res.render('posts/new', {post: post,
+                                 validate_errors: validate_errors});
         return;
     } 
     
@@ -112,7 +113,8 @@ exports.update = function(req, res, next) {
             req.flash('error', validate_errors[err]);
         };
 
-        res.render('posts/edit', {post: req.post});
+        res.render('posts/edit', {post: req.post,
+				  validate_errors: validate_errors});
         return;
     } 
     req.post.updateAttributes({ title: req.post.title,

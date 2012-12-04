@@ -92,3 +92,14 @@ article {
     font-size: 12px;
     list-style: square;
 }
+
+
+.invalid_field {
+  padding: 2px;
+  background-color: red;
+  display: table; 
+}
+
+.field {
+  width: 100%;
+}
