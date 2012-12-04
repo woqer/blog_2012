@@ -35,8 +35,7 @@ exports.index = function(req, res, next) {
             
         })
         .error(function(error) {
-            console.log("Error: No puedo listar los posts.");
-            res.redirect('/');
+            next(error);
         });
 };
 
@@ -80,8 +79,7 @@ exports.create = function(req, res, next) {
             res.redirect('/posts');
         })
         .error(function(error) {
-            console.log("Error: No puedo crear el post:", error);
-            res.render('posts/new', {post: post});
+            next(error);
         });
 };
 
@@ -109,8 +107,7 @@ exports.update = function(req, res, next) {
             res.redirect('/posts');
         })
         .error(function(error) {
-            console.log("Error: No puedo editar el post:", error);
-            res.render('posts/edit', {post: req.post});
+            next(error);
         });
 };
 
@@ -122,7 +119,6 @@ exports.destroy = function(req, res, next) {
             res.redirect('/posts');
         })
         .error(function(error) {
-            console.log("Error: No puedo eliminar el post:", error);
-            res.redirect('back');
+            next(error);
         });
 };
