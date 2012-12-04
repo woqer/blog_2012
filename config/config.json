@@ -4,5 +4,5 @@
     "database":"blog",
     "host":"127.0.0.1",
     "dialect": "sqlite",
-    "storage": "db/post.sqlite"
+    "storage": "db/blog.sqlite"
 }

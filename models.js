@@ -8,7 +8,7 @@ var Sequelize = require('sequelize');
 // Para usar SQLite:
 var sequelize = new Sequelize('blog', 'core', null, 
 			      {dialect: "sqlite",
-			       storage: "db/post.sqlite"});
+			       storage: "db/blog.sqlite"});
 
 // Campos de los posts.
 var Post = sequelize.define('Post',
