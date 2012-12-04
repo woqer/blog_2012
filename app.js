@@ -40,6 +40,8 @@ app.get('/users', user.list);
 
 //---------------------
 
+app.param('postid', postController.load);
+
 app.get('/posts', postController.index);
 app.get('/posts/new', postController.new);
 app.get('/posts/:postid([0-9]+)', postController.show);
