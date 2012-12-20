@@ -1,0 +1,12 @@
+<h1>Nuevo Usuario</h1>
+
+<form method='post' action='/users'>
+
+  <!-- Bug en la version 0.0.6 de express-partials -->
+  <!-- %- partial('form') % -->
+
+  <%- include _form.ejs %>
+
+</form>
+
+<A href="/users"> Volver </a>

@@ -5,11 +5,11 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
   , partials = require('express-partials')
-  , postController = require('./routes/post_controller.js');
+  , postController = require('./routes/post_controller.js')
+  , userController = require('./routes/user_controller.js');
 
 var util = require('util');
 
@@ -60,7 +60,6 @@ if ('development' == app.get('env')) {
 //-- Routes
 
 app.get('/', routes.index);
-app.get('/users', user.list);
 
 //---------------------
 
@@ -73,6 +72,18 @@ app.post('/posts', postController.create);
 app.get('/posts/:postid([0-9]+)/edit', postController.edit);
 app.put('/posts/:postid([0-9]+)', postController.update);
 app.delete('/posts/:postid([0-9]+)', postController.destroy);
+
+//---------------------
+
+app.param('userid', userController.load);
+
+app.get('/users', userController.index);
+app.get('/users/new', userController.new);
+app.get('/users/:userid([0-9]+)', userController.show);
+app.post('/users', userController.create);
+app.get('/users/:userid([0-9]+)/edit', userController.edit);
+app.put('/users/:userid([0-9]+)', userController.update);
+app.delete('/users/:userid([0-9]+)', userController.destroy);
 
 //---------------------
 

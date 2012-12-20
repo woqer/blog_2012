@@ -41,6 +41,40 @@ var Post = sequelize.define('Post',
               }
             });
 
+// Campos de los Usuarios.
+var User = sequelize.define(
+    'User',
+    { 
+        login: {
+            type: Sequelize.STRING,
+            validate: {
+                notEmpty: { msg: "El campo login no puede estar vacio" }
+            }
+        },
+        name: {
+            type: Sequelize.STRING,
+            validate: {
+                notEmpty: { msg: "El campo nombre no puede estar vacio" }
+            }
+        },
+        email: {
+            type: Sequelize.TEXT,
+            validate: {
+                isEmail: { msg: "El formato del email introducido no es correcto" },
+                notEmpty: { msg: "El campo email no puede estar vacio" }
+            }
+        },
+        hashed_password: {
+            type: Sequelize.STRING
+        },
+        salt: {
+            type: Sequelize.STRING
+        }
+        
+    });
+
+
 
 // Exportar la clase creada:
 exports.Post = Post;
+exports.User = User;
