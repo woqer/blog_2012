@@ -1,6 +1,6 @@
 
 var model = require('../models.js');
-
+var crypto = require('crypto');
 
 /*
 *  Auto-loading con app.param
@@ -8,7 +8,10 @@ var model = require('../models.js');
 exports.load = function(req, res, next, id) {
 
    model.User
-        .find(Number(id))
+        .find({
+            where: {id: Number(id)},
+            attributes:  ['id', 'login', 'name', 'email']
+        })
         .success(function(user) {
             if (user) {
                 req.user = user;
@@ -31,7 +34,9 @@ exports.load = function(req, res, next, id) {
 exports.index = function(req, res, next) {
 
     model.User
-        .findAll({order: 'name'})
+        .findAll({order: 'name',
+                  attributes: ['id', 'login', 'name', 'email']
+                 })
         .success(function(users) {
             res.render('users/index', {
                 users: users
@@ -68,9 +73,7 @@ exports.create = function(req, res, next) {
     var user = model.User.build(
         { login: req.body.user.login,
           name:  req.body.user.name,
-          email: req.body.user.email,
-          hashed_password: '',
-          salt: ''
+          email: req.body.user.email
         });
     
     // El login debe ser unico:
@@ -100,6 +103,9 @@ exports.create = function(req, res, next) {
                     return;
                 } 
                 
+                user.salt = createNewSalt();
+                user.hashed_password = encriptarPassword(req.body.user.password, user.salt);
+
                 user.save()
                     .success(function() {
                         req.flash('success', 'Usuario creado con éxito.');
@@ -140,12 +146,21 @@ exports.update = function(req, res, next) {
                                   validate_errors: validate_errors});
         return;
     } 
+ 
+    var fields_to_update = {
+        name:  req.body.user.name,
+        email: req.body.user.email
+    };
     
-    req.user.updateAttributes({
-        login: req.user.login,
-        name:  req.user.name,
-        email: req.user.email
-    })
+    // ¿Cambio el password?
+    if (req.body.user.password) {
+        console.log('Hay que actualizar el password');
+        fields_to_update.salt = createNewSalt();
+        fields_to_update.hashed_password = encriptarPassword(req.body.user.password, 
+                                                             fields_to_update.salt);
+    }
+    
+    req.user.updateAttributes(fields_to_update)
         .success(function() {
             req.flash('success', 'Usuario actualizado con éxito.');
             res.redirect('/users');
@@ -168,3 +183,57 @@ exports.destroy = function(req, res, next) {
         });
     
 };
+
+
+// ----------------------------------
+// Autenticacion
+// ----------------------------------
+
+/*
+ * Crea un string aleatorio para usar como salt.
+ */
+function createNewSalt() {
+    return Math.round((new Date().valueOf() * Math.random())) + '';
+};
+
+/*
+ * Encripta un password en claro.
+ * Mezcla un password en claro con el salt proporcionado, ejecuta un SHA1 digest, 
+ * y devuelve 40 caracteres hexadecimales.
+ */
+function encriptarPassword(password, salt) {
+    return crypto.createHmac('sha1', salt).update(password).digest('hex');
+};
+
+/*
+ * Autenticar un usuario.
+ *
+ * Busca el usuario con el login dado en la base de datos y comprueba su password.
+ * Si todo es correcto ejecuta callback(null,user).
+ * Si la autenticación falla o hay errores se ejecuta callback(error).
+ */
+exports.autenticar = function(login, password, callback) {
+    
+    model.User.find({where: {login: login}})
+        .success(function(user) {
+            if (user) {
+                console.log('Encontrado el usuario.');
+                
+                var hash = encriptarPassword(password, user.salt);
+                
+                if (hash == user.hashed_password) {
+                    callback(null,user);
+                } else {
+                    callback('Password erroneo.');
+                };
+            } else {
+                callback('No existe ningún usuario registrado con ese login.');
+            }
+        })
+        .error(function(err) {
+            callback(err);
+        });
+}; 
+
+//  ----------------------------------
+
