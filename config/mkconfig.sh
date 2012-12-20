@@ -1,11 +1,5 @@
 #! /bin/sh
 
-if [ "xx$(pwd)" != "xx/app/config" ] ; then
-   echo "ERROR: Este comando solo debe ejecutarse en los dynos de heroku."
-   echo "       Crea el fichero config/config.json usado por sequelize."
-   exit
-fi
-
 cat > config.json <<EOF
 {
     "username": "$DATABASE_USER",
