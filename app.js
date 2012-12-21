@@ -82,22 +82,25 @@ app.param('postid', postController.load);
 app.get('/posts', postController.index);
 
 app.get('/posts/new', 
-	sessionController.requiresLogin,
+        sessionController.requiresLogin,
         postController.new);
 
 app.get('/posts/:postid([0-9]+)', postController.show);
 app.post('/posts', postController.create);
 
 app.get('/posts/:postid([0-9]+)/edit', 
-	sessionController.requiresLogin,
+        sessionController.requiresLogin,
+        postController.loggedUserIsAuthor,
         postController.edit);
 
 app.put('/posts/:postid([0-9]+)', 
-	sessionController.requiresLogin,
+        sessionController.requiresLogin,
+        postController.loggedUserIsAuthor,
         postController.update);
 
 app.delete('/posts/:postid([0-9]+)', 
            sessionController.requiresLogin,
+           postController.loggedUserIsAuthor,
            postController.destroy);
 
 //---------------------
@@ -110,15 +113,15 @@ app.get('/users/:userid([0-9]+)', userController.show);
 app.post('/users', userController.create);
 
 app.get('/users/:userid([0-9]+)/edit', 
-	sessionController.requiresLogin,
+        sessionController.requiresLogin,
         userController.edit);
 
 app.put('/users/:userid([0-9]+)', 
-	sessionController.requiresLogin,
+        sessionController.requiresLogin,
         userController.update);
 
 app.delete('/users/:userid([0-9]+)', 
-	sessionController.requiresLogin,
+        sessionController.requiresLogin,
            userController.destroy);
 
 //---------------------

@@ -24,6 +24,23 @@ exports.load = function(req, res, next, id) {
 };
 
 
+
+/*
+* Comprueba que el usuario logeado es el author.
+*/
+exports.loggedUserIsAuthor = function(req, res, next) {
+    
+    if (req.session.user && req.session.user.id == req.post.authorId) {
+	next();
+    } else {
+	console.log('Operación prohibida: El usuario logeado no es el autor del post.');
+	res.send(403);
+    }
+};
+
+
+//-----------------------------------------------------------
+
 // GET /posts
 exports.index = function(req, res, next) {
 
