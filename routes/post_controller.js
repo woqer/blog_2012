@@ -8,7 +8,7 @@ var model = require('../models.js');
 exports.load = function(req, res, next, id) {
 
    model.Post
-        .find(Number(id))
+        .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
                 req.post = post;
