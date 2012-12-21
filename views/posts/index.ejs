@@ -8,6 +8,7 @@
         <h3>
           <a href='/posts/<%= posts[i].id %>' class='titlelink'> <%= posts[i].title %> </a>
         </h3>
+        <em> <%= posts[i].user.name || "Sin autor" %> </em>
      </header>
      
      <p>

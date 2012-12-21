@@ -3,8 +3,7 @@
 <p>
   <b><%= post.title %></b>
   <br />
-  by 
-  <em>El autor</em>
+  <em><%= post.user.name || 'Sin autor' %></em>
 </p>
 
 <p>

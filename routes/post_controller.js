@@ -8,7 +8,7 @@ var model = require('../models.js');
 exports.load = function(req, res, next, id) {
 
    model.Post
-        .find(Number(id))
+        .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
                 req.post = post;
@@ -45,7 +45,10 @@ exports.loggedUserIsAuthor = function(req, res, next) {
 exports.index = function(req, res, next) {
 
     model.Post
-        .findAll({order: 'updatedAt DESC'})
+        .findAll({
+	    order: 'updatedAt DESC',
+	    include: ['User']
+	})
         .success(function(posts) {
             res.render('posts/index', {
                 posts: posts
@@ -60,9 +63,22 @@ exports.index = function(req, res, next) {
 // GET /posts/33
 exports.show = function(req, res, next) {
 
-    res.render('posts/show', {
-        post: req.post
-    });
+    // Buscar el autor
+    model.User
+        .find({where: {id: req.post.authorId}})
+        .success(function(user) {
+
+            // Si encuentro al autor lo añado como el atributo user, sino añado {}.
+	    req.post.user = user || {};
+
+            res.render('posts/show', {
+                post: req.post
+            });
+        })
+        .error(function(error) {
+            next(error);
+        });
+
 };
 
 // GET /posts/new
