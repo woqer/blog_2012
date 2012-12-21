@@ -24,7 +24,7 @@ exports.show = function(req, res, next) {
     var id =  req.params.postid;
     
     model.Post
-        .find(Number(id))
+        .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
                 res.render('posts/show', {
@@ -84,7 +84,7 @@ exports.edit = function(req, res, next) {
     var id =  req.params.postid;
     
     model.Post
-        .find(Number(id))
+        .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
                 res.render('posts/edit', {post: post});
@@ -105,7 +105,7 @@ exports.update = function(req, res, next) {
     var id =  req.params.postid;
     
     model.Post
-        .find(Number(id))
+        .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
                 post.title = req.body.post.title;
@@ -143,7 +143,7 @@ exports.destroy = function(req, res, next) {
     var id =  req.params.postid;
     
     model.Post
-        .find(Number(id))
+        .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
                 
