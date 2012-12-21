@@ -8,7 +8,7 @@ var model = require('../models.js');
 exports.load = function(req, res, next, id) {
 
    model.User
-        .find(Number(id))
+        .find({where: {id: Number(id)}})
         .success(function(user) {
             if (user) {
                 req.user = user;
