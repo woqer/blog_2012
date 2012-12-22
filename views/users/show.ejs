@@ -16,5 +16,8 @@
 </p>
 
 
-<a href="/users/<%= user.id %>/edit"> Edit </a>
+<% if (session.user && session.user.id == user.id) {%>
+   <a href="/users/<%= user.id %>/edit"> Editar </a>
+<% } %>
+
 <a href="/users"> Back  </a>
