@@ -73,6 +73,32 @@ var User = sequelize.define(
         
     });
 
+
+// Campos de los Comentarios.
+var Comment = sequelize.define(
+    'Comment',
+    { 
+        authorId: {
+            type: Sequelize.INTEGER,
+            validate: {
+                notEmpty: { msg: "El campo authorId no puede estar vacío" }
+            }
+        },
+        postId: {
+            type: Sequelize.INTEGER,
+            validate: {
+                notEmpty: { msg: "El campo postId no puede estar vacío" }
+            }
+        },
+        body: {
+            type: Sequelize.TEXT,
+            validate: {
+                notEmpty: { msg: "El cuerpo del comentario no puede estar vacío" }
+            }
+        }
+    });
+
+
 // Relaciones
 
 // La llamada User.hasMany(Post); 
@@ -83,6 +109,8 @@ var User = sequelize.define(
 // Como el atributo del modelo Post que apunta a User se llama authorId 
 // en vez de userId, he añadido una opcion que lo indica.
 User.hasMany(Post, {foreignKey: 'authorId'});
+User.hasMany(Comment, {foreignKey: 'authorId'});
+Post.hasMany(Comment, {foreignKey: 'postId'});
 
 // La llamada Post.belongsTo(User);
 //  - crea en el modelo de Post un atributo llamado userId,
@@ -93,9 +121,12 @@ User.hasMany(Post, {foreignKey: 'authorId'});
 // foreignkey del modelo Post es authorId, y los metodos creados son 
 // setAuthor y getAuthor. 
 Post.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
-
+Comment.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
+Comment.belongsTo(Post, {as: 'Post', foreignKey: 'postId'});
 
 
 // Exportar la clase creada:
 exports.Post = Post;
 exports.User = User;
+exports.Comment = Comment;
+

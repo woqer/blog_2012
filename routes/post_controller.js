@@ -12,9 +12,9 @@ exports.load = function(req, res, next, id) {
         .success(function(post) {
             if (post) {
                 req.post = post;
-		next();
+                next();
             } else {
-		req.flash('error', 'No existe el post con id='+id+'.');
+                req.flash('error', 'No existe el post con id='+id+'.');
                 next('No existe el post con id='+id+'.');
             }
         })
@@ -31,10 +31,10 @@ exports.load = function(req, res, next, id) {
 exports.loggedUserIsAuthor = function(req, res, next) {
     
     if (req.session.user && req.session.user.id == req.post.authorId) {
-	next();
+        next();
     } else {
-	console.log('Operación prohibida: El usuario logeado no es el autor del post.');
-	res.send(403);
+        console.log('Operación prohibida: El usuario logeado no es el autor del post.');
+        res.send(403);
     }
 };
 
@@ -46,9 +46,9 @@ exports.index = function(req, res, next) {
 
     model.Post
         .findAll({
-	    order: 'updatedAt DESC',
-	    include: ['User']
-	})
+            order: 'updatedAt DESC',
+            include: ['User']
+        })
         .success(function(posts) {
             res.render('posts/index', {
                 posts: posts
@@ -67,18 +67,32 @@ exports.show = function(req, res, next) {
     model.User
         .find({where: {id: req.post.authorId}})
         .success(function(user) {
-
             // Si encuentro al autor lo añado como el atributo user, sino añado {}.
-	    req.post.user = user || {};
+            req.post.user = user || {};
 
-            res.render('posts/show', {
-                post: req.post
-            });
+            // Buscar comentarios
+            model.Comment
+                 .findAll({where: {postId: req.post.id},
+                           order: 'updatedAt DESC',
+                           include: ['User'] 
+                 })
+                 .success(function(comments) {
+                    var new_comment = model.Comment.build({
+                        body: 'Introduzca el texto del comentario'
+                    });
+                    res.render('posts/show', {
+                        post: req.post,
+                        comments: comments,
+                        comment: new_comment
+                    });
+                 })
+                 .error(function(error) {
+                     next(error);
+                  });
         })
         .error(function(error) {
             next(error);
         });
-
 };
 
 // GET /posts/new
@@ -147,7 +161,7 @@ exports.update = function(req, res, next) {
         };
 
         res.render('posts/edit', {post: req.post,
-				  validate_errors: validate_errors});
+                                  validate_errors: validate_errors});
         return;
     } 
     req.post.updateAttributes({ title: req.post.title,

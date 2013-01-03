@@ -10,7 +10,8 @@ var express = require('express')
   , partials = require('express-partials')
   , sessionController = require('./routes/session_controller.js')
   , postController = require('./routes/post_controller.js')
-  , userController = require('./routes/user_controller.js');
+  , userController = require('./routes/user_controller.js')
+  , commentController = require('./routes/comment_controller.js');
 
 var util = require('util');
 
@@ -71,13 +72,50 @@ app.get('/', routes.index);
 
 //---------------------
 
+// Auto-Loading:
+
+app.param('postid', postController.load);
+app.param('userid', userController.load);
+app.param('commentid', commentController.load);
+
+//---------------------
+
 app.get('/login',  sessionController.new);
 app.post('/login', sessionController.create);
 app.get('/logout', sessionController.destroy);
 
 //---------------------
 
-app.param('postid', postController.load);
+app.get('/posts/:postid([0-9]+)/comments', 
+	commentController.index);
+
+app.get('/posts/:postid([0-9]+)/comments/new', 
+	sessionController.requiresLogin,
+	commentController.new);
+
+app.get('/posts/:postid([0-9]+)/comments/:commentid([0-9]+)',
+	commentController.show);
+
+app.post('/posts/:postid([0-9]+)/comments', 
+	 sessionController.requiresLogin,
+	 commentController.create);
+
+app.get('/posts/:postid([0-9]+)/comments/:commentid([0-9]+)/edit', 
+	sessionController.requiresLogin,
+	commentController.loggedUserIsAuthor,
+	commentController.edit);
+
+app.put('/posts/:postid([0-9]+)/comments/:commentid([0-9]+)', 
+	sessionController.requiresLogin,
+	commentController.loggedUserIsAuthor,
+	commentController.update);
+
+app.delete('/posts/:postid([0-9]+)/comments/:commentid([0-9]+)', 
+	   sessionController.requiresLogin,
+	   commentController.loggedUserIsAuthor,
+	   commentController.destroy);
+
+//---------------------
 
 app.get('/posts', postController.index);
 
@@ -106,8 +144,6 @@ app.delete('/posts/:postid([0-9]+)',
            postController.destroy);
 
 //---------------------
-
-app.param('userid', userController.load);
 
 app.get('/users', userController.index);
 app.get('/users/new', userController.new);
