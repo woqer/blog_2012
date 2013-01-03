@@ -86,7 +86,9 @@ app.get('/posts/new',
         postController.new);
 
 app.get('/posts/:postid([0-9]+)', postController.show);
-app.post('/posts', postController.create);
+app.post('/posts', 
+	sessionController.requiresLogin,
+        postController.create);
 
 app.get('/posts/:postid([0-9]+)/edit', 
 	sessionController.requiresLogin,
