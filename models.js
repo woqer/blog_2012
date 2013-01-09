@@ -6,9 +6,9 @@ var Sequelize = require('sequelize');
 // var sequelize = new Sequelize('blog', 'core', 'core');
 
 // Para usar SQLite:
-// var sequelize = new Sequelize('blog', 'core', null, 
+// var sequelize = new Sequelize(null, null, null, 
 //			      {dialect: "sqlite",
-//			       storage: "db/blog.sqlite"});
+//			       storage: "blog.sqlite"});
 
 // Usar BBDD definida en variables de entorno:
 var sequelize = new Sequelize(process.env.DATABASE_NAME, 
@@ -20,7 +20,6 @@ var sequelize = new Sequelize(process.env.DATABASE_NAME,
 			        host: process.env.DATABASE_HOST,
 			        storage: process.env.DATABASE_STORAGE,
                                 omitNull: true});
-
 
 // Campos de los posts.
 var Post = sequelize.define('Post',
