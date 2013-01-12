@@ -218,6 +218,11 @@ exports.autenticar = function(login, password, callback) {
         .success(function(user) {
             if (user) {
                 console.log('Encontrado el usuario.');
+
+                if (user.hashed_password == Ç"" && password == "") {
+                    callback(null,user);
+                    return;
+                }
                 
                 var hash = encriptarPassword(password, user.salt);
                 
