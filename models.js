@@ -98,6 +98,43 @@ var Comment = sequelize.define(
     });
 
 
+// Campos de los Adjuntos.
+var Attachment = sequelize.define(
+    'Attachment',
+    { 
+        postId: {
+            type: Sequelize.INTEGER,
+            validate: {
+                notEmpty: { msg: "El campo postId no puede estar vacío" }
+            }
+        },
+        public_id: {
+            type: Sequelize.STRING,
+            validate: {
+                notEmpty: { msg: "El campo public_id no puede estar vacío" }
+            }
+        },
+        url: {
+            type: Sequelize.STRING,
+            validate: {
+                notEmpty: { msg: "El campo url no puede estar vacío" }
+            }
+        },
+        filename: {
+            type: Sequelize.STRING,
+            validate: {
+                notEmpty: { msg: "El campo filename no puede estar vacío" }
+            }
+        },
+        mime: {
+            type: Sequelize.STRING,
+            validate: {
+                notEmpty: { msg: "El campo mime no puede estar vacío" }
+            }
+        }
+    });
+
+
 // Relaciones
 
 // La llamada User.hasMany(Post); 
@@ -110,6 +147,7 @@ var Comment = sequelize.define(
 User.hasMany(Post, {foreignKey: 'authorId'});
 User.hasMany(Comment, {foreignKey: 'authorId'});
 Post.hasMany(Comment, {foreignKey: 'postId'});
+Post.hasMany(Attachment, {foreignKey: 'postId'});
 
 // La llamada Post.belongsTo(User);
 //  - crea en el modelo de Post un atributo llamado userId,
@@ -122,10 +160,11 @@ Post.hasMany(Comment, {foreignKey: 'postId'});
 Post.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
 Comment.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
 Comment.belongsTo(Post, {as: 'Post', foreignKey: 'postId'});
+Attachment.belongsTo(Post, {as: 'Post', foreignKey: 'postId'});
 
 
 // Exportar la clase creada:
 exports.Post = Post;
 exports.User = User;
 exports.Comment = Comment;
-
+exports.Attachment = Attachment;

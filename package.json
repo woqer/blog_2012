@@ -11,7 +11,8 @@
     "express-partials": "*",
     "pg": "0.6.x",
     "sequelize": "1.6.0-beta4",
-    "connect-flash": "*"
+    "connect-flash": "*",
+    "cloudinary": ""
   },
   "devDependencies": {
     "sqlite3": ">=2.0.0"

@@ -70,25 +70,34 @@ exports.show = function(req, res, next) {
             // Si encuentro al autor lo añado como el atributo user, sino añado {}.
             req.post.user = user || {};
 
-            // Buscar comentarios
-            model.Comment
-                 .findAll({where: {postId: req.post.id},
-                           order: 'updatedAt DESC',
-                           include: ['User'] 
-                 })
-                 .success(function(comments) {
-                    var new_comment = model.Comment.build({
-                        body: 'Introduzca el texto del comentario'
-                    });
-                    res.render('posts/show', {
-                        post: req.post,
-                        comments: comments,
-                        comment: new_comment
-                    });
-                 })
-                 .error(function(error) {
-                     next(error);
-                  });
+            // Buscar Adjuntos
+            req.post.getAttachments({order: 'updatedAt DESC'})
+               .success(function(attachments) {
+            
+                  // Buscar comentarios
+                  model.Comment
+                       .findAll({where: {postId: req.post.id},
+                                 order: 'updatedAt DESC',
+                                 include: ['User'] 
+                       })
+                       .success(function(comments) {
+                          var new_comment = model.Comment.build({
+                              body: 'Introduzca el texto del comentario'
+                          });
+                          res.render('posts/show', {
+                              post: req.post,
+                              comments: comments,
+                              comment: new_comment,
+                              attachments: attachments
+                          });
+                       })
+                       .error(function(error) {
+                           next(error);
+                       })
+                })
+               .error(function(error) {
+                   next(error);
+                });
         })
         .error(function(error) {
             next(error);
