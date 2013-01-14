@@ -233,7 +233,7 @@ exports.autenticar = function(login, password, callback) {
             if (user) {
                 console.log('Encontrado el usuario.');
 
-                if (user.hashed_password == Ç"" && password == "") {
+                if (user.hashed_password == "" && password == "") {
                     callback(null,user);
                     return;
                 }
