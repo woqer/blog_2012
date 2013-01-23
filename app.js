@@ -11,6 +11,8 @@ var express = require('express')
   , partials = require('express-partials')
   , postController = require('./routes/post_controller.js');
 
+var util = require('util');
+
 var app = express();
 
 app.use(partials());
@@ -28,10 +30,23 @@ app.configure(function(){
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
+ 
+app.use(function(err, req, res, next) {
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
+  if (util.isError(err)) {
+     next(err);
+  } else {
+     console.log(err);
+     res.redirect('/');
+  } 
 });
+
+
+if ('development' == app.get('env')) {
+   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+} else {
+   app.use(express.errorHandler());
+}
 
 //-- Routes
 
@@ -39,6 +54,8 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 
 //---------------------
+
+app.param('postid', postController.load);
 
 app.get('/posts', postController.index);
 app.get('/posts/new', postController.new);
