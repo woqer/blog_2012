@@ -140,11 +140,30 @@ exports.destroy = function(req, res, next) {
 // GET /raws
 exports.raws = function(req, res, next) {
 
+  var next_cursor = req.query['next_cursor'] || '';
+  var raws_page = parseInt(req.query['raws_page']) || 1;
+
   cloudinary.api.resources(function(result) {
-                              console.log(result);
+                             // console.log(result);
+                              res.write('<html>\n');
+                              res.write('<head><meta charset="utf-8"></head>\n');
+                              res.write('<body>\n');
+                              res.write('<h1>Adjuntos (página '+raws_page+')</h1>\n');
+                              res.write('<ol>\n');
                               for (var i in result.resources) {
-                                 res.write('<p>'+result.resources[i].url+'</p>');
+                                 res.write('  <li>'+result.resources[i].url+
+                                           ' ('+result.resources[i].bytes+' bytes)</li>\n');
                               }
-                              res.end();
-                           }, {resource_type: 'raw'});
+                              res.write('</ol>');
+
+                              res.write('<a href="/raws">Inicio</a>');
+                              if (result.next_cursor) {
+                                res.write('<a href="/raws?next_cursor='+ result.next_cursor +
+                                          '&raws_page='+(raws_page+1)+'">Ver más</a>');
+                              }
+
+                              res.end('</body></html>');
+                           }, {resource_type: 'raw',
+                               max_results: 10,
+                               next_cursor: next_cursor});
 };
