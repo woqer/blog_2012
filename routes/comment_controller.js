@@ -191,4 +191,26 @@ exports.destroy = function(req, res, next) {
         });
 };
 
+//-----------------------------------------------------------
+
+// GET /orphancomments
+exports.orphans = function(req, res, next) {
+
+    model.Comment
+        .findAll({order: 'postId',
+                  include: ['User', 'Post']})
+        .success(function(comments) {
+
+            console.log(comments);
+
+            res.render('comments/orphans', {
+                comments: comments
+            });
+        })
+        .error(function(error) {
+            next(error);
+        });
+};
+
+//-----------------------------------------------------------
 

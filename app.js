@@ -145,6 +145,10 @@ app.delete('/posts/:postid([0-9]+)/comments/:commentid([0-9]+)',
 	   commentController.loggedUserIsAuthor,
 	   commentController.destroy);
 
+// Comentarios Huerfanos
+app.get('/orphancomments', 
+  commentController.orphans);
+
 //---------------------
 
 app.get('/posts', postController.index);

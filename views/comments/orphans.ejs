@@ -1,0 +1,33 @@
+<header>
+  <h2> Comentarios Huerfanos</h2>
+</header>
+
+<% for (var i in comments) { %>
+
+  <% var post = comments[i].post %>
+  <% var user = comments[i].user %>
+
+  <% if (!post.id || !user.id) { %>
+
+	  <article>
+	    <header>
+	        <p>
+    	        <em> <%= post.title || "Sin articulo" %> </em>
+	        </p>
+	        <p>
+	            <em> <%= user.name || "Sin autor" %> </em>
+	        </p>
+	        <p>
+	          <%= comments[i].updatedAt.toLocaleDateString() %>
+	        </p>
+  	    </header> 
+	     
+	    <p>
+	       <%= comments[i].body %>
+	    </p>
+
+	  </article>
+  <% } %>
+
+<%  }; %>
+
