@@ -178,12 +178,31 @@ exports.update = function(req, res, next) {
 // DELETE /posts/33
 exports.destroy = function(req, res, next) {
 
-    req.post.destroy()
-        .success(function() {
-            req.flash('success', 'Post eliminado con éxito.');
-            res.redirect('/posts');
-        })
-        .error(function(error) {
-            next(error);
-        });
+    var Sequelize = require('sequelize');
+    var chainer = new Sequelize.Utils.QueryChainer
+
+    // Obtener los comentarios
+    req.post.getComments()
+       .success(function(comments) {
+           for (var i in comments) {
+                // Eliminar un comentario
+                chainer.add(comments[i].destroy());
+           }
+
+           // Eliminar el post
+           chainer.add(req.post.destroy());
+
+           // Ejecutar el chainer
+           chainer.run()
+            .success(function(){
+                 req.flash('success', 'Post (y sus comentarios) eliminado con éxito.');
+                 res.redirect('/posts');
+            })
+            .error(function(errors){
+                next(errors[0]);   
+            })
+       })
+       .error(function(error) {
+           next(error);
+       });
 };
