@@ -44,21 +44,70 @@ exports.loggedUserIsAuthor = function(req, res, next) {
 // GET /posts
 exports.index = function(req, res, next) {
 
+    var format = req.params.format || 'html';
+    format = format.toLowerCase();
+
     model.Post
         .findAll({
             order: 'updatedAt DESC',
             include: ['User']
         })
         .success(function(posts) {
-            res.render('posts/index', {
-                posts: posts
-            });
-            
+            switch (format) { 
+              case 'html':
+              case 'htm':
+                  res.render('posts/index', {
+                    posts: posts
+                  });
+                  break;
+              case 'json':
+                  res.send(posts);
+                  break;
+              case 'xml':
+                  res.send(posts_to_xml(posts));
+                  break;
+              case 'txt':
+                  res.send(posts.map(function(post) {
+                      return post.title+' ('+post.body+')';
+                  }).join('\n'));
+                  break;
+              default:
+                  console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
+                  res.send(406);
+            }
         })
         .error(function(error) {
             next(error);
         });
 };
+
+function posts_to_xml(posts) {
+
+    var builder = require('xmlbuilder');
+    var xml = builder.create('posts')
+    for (var i in posts) {
+        xml.ele('post')
+              .ele('id')
+                 .txt(posts[i].id)
+                 .up()
+              .ele('title')
+                 .txt(posts[i].title)
+                 .up()
+              .ele('body')
+                 .txt(posts[i].body)
+                 .up()
+              .ele('authorId')
+                 .txt(posts[i].authorId)
+                 .up()
+              .ele('createdAt')
+                 .txt(posts[i].createdAt)
+                 .up()
+              .ele('updatedAt')
+                 .txt(posts[i].updatedAt);
+    }
+    return xml.end({pretty: true});
+}
+
 
 // GET /posts/33
 exports.show = function(req, res, next) {
@@ -81,15 +130,36 @@ exports.show = function(req, res, next) {
                                  include: ['User'] 
                        })
                        .success(function(comments) {
-                          var new_comment = model.Comment.build({
-                              body: 'Introduzca el texto del comentario'
-                          });
-                          res.render('posts/show', {
-                              post: req.post,
-                              comments: comments,
-                              comment: new_comment,
-                              attachments: attachments
-                          });
+
+                          var format = req.params.format || 'html';
+                          format = format.toLowerCase();
+
+                          switch (format) { 
+                            case 'html':
+                            case 'htm':
+                                var new_comment = model.Comment.build({
+                                    body: 'Introduzca el texto del comentario'
+                                });
+                                res.render('posts/show', {
+                                    post: req.post,
+                                    comments: comments,
+                                    comment: new_comment,
+                                    attachments: attachments
+                                });
+                                break;
+                            case 'json':
+                                res.send(req.post);
+                                break;
+                            case 'xml':
+                                res.send(post_to_xml(req.post));
+                                break;
+                            case 'txt':
+                                res.send(req.post.title+' ('+req.post.body+')');
+                                break;
+                            default:
+                                console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
+                                res.send(406);
+                          }
                        })
                        .error(function(error) {
                            next(error);
@@ -102,6 +172,36 @@ exports.show = function(req, res, next) {
         .error(function(error) {
             next(error);
         });
+};
+
+function post_to_xml(post) {
+
+    var builder = require('xmlbuilder');
+    if (post) {
+       var xml = builder.create('post')
+              .ele('id')
+                 .txt(post.id)
+                 .up()
+              .ele('title')
+                 .txt(post.title)
+                 .up()
+              .ele('body')
+                 .txt(post.body)
+                 .up()
+              .ele('authorId')
+                 .txt(post.authorId)
+                 .up()
+              .ele('createdAt')
+                 .txt(post.createdAt)
+                 .up()
+              .ele('updatedAt')
+                 .txt(post.updatedAt);
+       return xml.end({pretty: true});
+    } else {
+       var xml = builder.create('error')
+                           .txt('post no existe');
+       return xml.end({pretty: true});
+    }
 };
 
 // GET /posts/new

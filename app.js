@@ -151,13 +151,13 @@ app.get('/orphancomments',
 
 //---------------------
 
-app.get('/posts', postController.index);
+app.get('/posts.:format?', postController.index);
 
 app.get('/posts/new', 
         sessionController.requiresLogin,
         postController.new);
 
-app.get('/posts/:postid([0-9]+)', postController.show);
+app.get('/posts/:postid([0-9]+).:format?', postController.show);
 app.post('/posts', 
 	sessionController.requiresLogin,
         postController.create);
