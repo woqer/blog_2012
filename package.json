@@ -10,7 +10,8 @@
     "ejs": "*",
     "express-partials": "*",
     "pg": "0.6.x",
-    "sequelize": "1.6.0-beta4"
+    "sequelize": "1.6.0-beta4",
+    "xmlbuilder": "0.4.2"
   },
   "devDependencies": {
     "sqlite3": ">=2.0.0"
