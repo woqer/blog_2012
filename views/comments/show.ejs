@@ -8,7 +8,7 @@
   <%= comment.updatedAt.toLocaleDateString() %>
 </p>
 
-<pre><%= comment.body %></pre>
+<p><%- escapeText(comment.body) %></p>
 
 <% if (session.user && session.user.id == comment.authorId) {%>
 

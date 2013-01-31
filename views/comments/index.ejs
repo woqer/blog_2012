@@ -12,7 +12,7 @@
    </header>
      
      <p>
-       <%= comments[i].body %>
+       <%- escapeText(comments[i].body) %>
      </p>
 
      <footer>
