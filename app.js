@@ -33,7 +33,17 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-//-- Routes
+// Helper estatico:
+app.locals.escapeText =  function(text) {
+   return String(text)
+          .replace(/&(?!\w+;)/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/\n/g, '<br>');
+};
+
+// -- Routes
 
 app.get('/', routes.index);
 app.get('/users', user.list);
