@@ -157,6 +157,12 @@
 
           <%- body %>
   
+          <div class="pull-right">
+            <%  if (locals.paginate_view) { %>
+              <%- paginate_view %>
+            <% } %>
+          </div>
+
         </div><!--/span-->
       </div><!--/row-->
 

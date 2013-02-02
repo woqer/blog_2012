@@ -48,8 +48,10 @@ exports.loggedUserIsUser = function(req, res, next) {
 exports.index = function(req, res, next) {
 
     model.User
-        .findAll({order: 'name',
-                  attributes: ['id', 'login', 'name', 'email']
+        .findAll({ offset: req.pagination.offset,
+                   limit:  req.pagination.limit,
+                   order: 'name',
+                   attributes: ['id', 'login', 'name', 'email']
                  })
         .success(function(users) {
             res.render('users/index', {

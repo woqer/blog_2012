@@ -49,6 +49,8 @@ exports.index = function(req, res, next) {
 
     model.Post
         .findAll({
+            offset: req.pagination.offset,
+            limit:  req.pagination.limit,
             order: 'updatedAt DESC',
             include: ['User']
         })
@@ -125,9 +127,11 @@ exports.show = function(req, res, next) {
             
                   // Buscar comentarios
                   model.Comment
-                       .findAll({where: {postId: req.post.id},
-                                 order: 'updatedAt DESC',
-                                 include: ['User'] 
+                       .findAll({ offset: req.pagination.offset,
+                                  limit:  req.pagination.limit,
+                                  where: {postId: req.post.id},
+                                  order: 'updatedAt DESC',
+                                  include: ['User'] 
                        })
                        .success(function(comments) {
 
