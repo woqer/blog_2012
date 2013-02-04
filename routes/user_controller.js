@@ -141,10 +141,7 @@ exports.update = function(req, res, next) {
         return;
     } 
     
-    req.user.updateAttributes({
-        name:  req.user.name,
-        email: req.user.email
-    })
+    req.user.save(['name','email'])
         .success(function() {
             req.flash('success', 'Usuario actualizado con éxito.');
             res.redirect('/users');
