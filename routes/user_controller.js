@@ -103,6 +103,13 @@ exports.create = function(req, res, next) {
                     return;
                 } 
                 
+                // El password no puede estar vacio
+                if ( ! req.body.user.password) {
+                    req.flash('error', 'El campo Password es obligatorio.');
+                    res.render('users/new', {user: user});
+                    return;
+                }
+
                 user.salt = createNewSalt();
                 user.hashed_password = encriptarPassword(req.body.user.password, user.salt);
 
