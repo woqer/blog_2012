@@ -3,7 +3,15 @@
 <script>
    function confirmPassword() {
       var pw1 = document.all['user_password'].value;    
-      var pw2 = document.all['user_confirm_password'].value;    
+      var pw2 = document.all['user_confirm_password'].value;  
+
+     <% if ( ! user.id) { %>
+        if (!pw1 || !pw2) {
+           alert('Debe rellenar los campos de Password y Confirmación.');
+           return false;         
+        } 
+     <% } %>
+
       if (pw1 == pw2) {
          return true;
       } else {
@@ -64,7 +72,7 @@
   </div>
 
   <div class="control-group">
-    <label class='control-label' for="user_confirm_password">Confirm Password:</label>
+    <label class='control-label' for="user_confirm_password">Confirmar Password:</label>
     <div class='controls'>
       <input type="password" id="user_confirm_password" size="30" 
             placeholder='Repita la palabra de paso' value='' />

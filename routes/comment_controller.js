@@ -168,7 +168,7 @@ exports.update = function(req, res, next) {
         return;
     } 
     
-    req.comment.updateAttributes({ body: req.comment.body })
+    req.comment.save(['body'])
         .success(function() {
             req.flash('success', 'Commentario actualizado con éxito.');
             res.redirect('/posts/' + req.post.id );

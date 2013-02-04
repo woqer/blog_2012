@@ -10,7 +10,7 @@ exports.load = function(req, res, next, id) {
    model.User
         .find({
             where: {id: Number(id)},
-            attributes:  ['id', 'login', 'name', 'email']
+            attributes: ['id','login','name','email','updatedAt','createdAt']
         })
         .success(function(user) {
             if (user) {
@@ -119,6 +119,13 @@ exports.create = function(req, res, next) {
                     return;
                 } 
                 
+                // El password no puede estar vacio
+                if ( ! req.body.user.password) {
+                    req.flash('error', 'El campo Password es obligatorio.');
+                    res.render('users/new', {user: user});
+                    return;
+                }
+
                 user.salt = createNewSalt();
                 user.hashed_password = encriptarPassword(req.body.user.password, user.salt);
 
@@ -163,10 +170,7 @@ exports.update = function(req, res, next) {
         return;
     } 
  
-    var fields_to_update = {
-        name:  req.body.user.name,
-        email: req.body.user.email
-    };
+    var fields_to_update = ['name','email'];
     
     // ¿Cambio el password?
     if (req.body.user.password) {
@@ -174,9 +178,11 @@ exports.update = function(req, res, next) {
         fields_to_update.salt = createNewSalt();
         fields_to_update.hashed_password = encriptarPassword(req.body.user.password, 
                                                              fields_to_update.salt);
+        fields_to_update.push('salt');
+        fields_to_update.push('hashed_password');
     }
     
-    req.user.updateAttributes(fields_to_update)
+    req.user.save(fields_to_update)
         .success(function() {
             req.flash('success', 'Usuario actualizado con éxito.');
             res.redirect('/users');
