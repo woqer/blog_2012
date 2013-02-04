@@ -227,8 +227,7 @@ exports.update = function(req, res, next) {
         res.render('posts/edit', {post: req.post});
         return;
     } 
-    req.post.updateAttributes({ title: req.post.title,
-                                body:  req.post.body })
+    req.post.save(['title', 'body'])
         .success(function() {
             req.flash('success', 'Post actualizado con éxito.');
             res.redirect('/posts');
