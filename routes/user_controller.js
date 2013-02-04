@@ -142,7 +142,6 @@ exports.update = function(req, res, next) {
     } 
     
     req.user.updateAttributes({
-        login: req.user.login,
         name:  req.user.name,
         email: req.user.email
     })
