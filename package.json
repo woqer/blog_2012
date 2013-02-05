@@ -8,6 +8,6 @@
   "dependencies": {
     "express": "3.0.3",
     "ejs": "*",
-    "express-partials": "*"
+    "express-partials": "git://github.com/publicclass/express-partials.git"
   }
 }
