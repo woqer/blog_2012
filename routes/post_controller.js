@@ -1,5 +1,5 @@
 
-var model = require('../models.js');
+var models = require('../models/models.js');
 
 // GET /posts
 exports.index = function(req, res, next) {
@@ -7,7 +7,7 @@ exports.index = function(req, res, next) {
     var format = req.params.format || 'html';
     format = format.toLowerCase();
 
-    model.Post
+    models.Post
         .findAll({order: 'updatedAt DESC'})
         .success(function(posts) {
             switch (format) { 
@@ -75,7 +75,7 @@ exports.show = function(req, res, next) {
 
     var id =  req.params.postid;
     
-    model.Post
+    models.Post
         .find({where: {id: Number(id)}})
         .success(function(post) {
             switch (format) { 
@@ -141,7 +141,7 @@ function post_to_xml(post) {
 // GET /posts/new
 exports.new = function(req, res, next) {
 
-    var post = model.Post.build(
+    var post = models.Post.build(
         { title:  'Introduzca el titulo',
           body: 'Introduzca el texto del articulo'
         });
@@ -152,7 +152,7 @@ exports.new = function(req, res, next) {
 // POST /posts
 exports.create = function(req, res, next) {
 
-    var post = model.Post.build(
+    var post = models.Post.build(
         { title: req.body.post.title,
           body: req.body.post.body,
           authorId: 0
@@ -180,7 +180,7 @@ exports.edit = function(req, res, next) {
 
     var id =  req.params.postid;
     
-    model.Post
+    models.Post
         .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
@@ -201,7 +201,7 @@ exports.update = function(req, res, next) {
 
     var id =  req.params.postid;
     
-    model.Post
+    models.Post
         .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
@@ -238,7 +238,7 @@ exports.destroy = function(req, res, next) {
 
     var id =  req.params.postid;
     
-    model.Post
+    models.Post
         .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
