@@ -18,10 +18,8 @@ var sequelize = new Sequelize(process.env.DATABASE_NAME,
 // Importar la definicion de los modelos:
 //    - Post desde post.js.
 //    - User desde user.js.
-// Y que este modulo exporte los modelos:
-
-exports.Post = sequelize.import(path.join(__dirname,'post'));
-exports.User = sequelize.import(path.join(__dirname,'user'));
+var Post = sequelize.import(path.join(__dirname,'post'));
+var User = sequelize.import(path.join(__dirname,'user'));
 
 // Relaciones
 
@@ -44,3 +42,7 @@ User.hasMany(Post, {foreignKey: 'authorId'});
 // setAuthor y getAuthor. 
 Post.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
 
+
+// Exportar los modelos:
+exports.Post = Post;
+exports.User = User;

@@ -112,7 +112,7 @@ function posts_to_xml(posts) {
 exports.show = function(req, res, next) {
 
     // Buscar el autor
-    model.User
+    models.User
         .find({where: {id: req.post.authorId}})
         .success(function(user) {
 
