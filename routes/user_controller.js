@@ -1,5 +1,5 @@
 
-var model = require('../models.js');
+var models = require('../models/models.js');
 
 
 /*
@@ -7,7 +7,7 @@ var model = require('../models.js');
 */
 exports.load = function(req, res, next, id) {
 
-   model.User
+   models.User
         .find({where: {id: Number(id)}})
         .success(function(user) {
             if (user) {
@@ -30,7 +30,7 @@ exports.load = function(req, res, next, id) {
 // GET /users
 exports.index = function(req, res, next) {
 
-    model.User
+    models.User
         .findAll({order: 'name'})
         .success(function(users) {
             res.render('users/index', {
@@ -53,7 +53,7 @@ exports.show = function(req, res, next) {
 // GET /users/new
 exports.new = function(req, res, next) {
 
-    var user = model.User.build(
+    var user = models.User.build(
         { login: 'Tu login',
           name:  'Tu nombre',
           email: 'Tu email'
@@ -65,7 +65,7 @@ exports.new = function(req, res, next) {
 // POST /users
 exports.create = function(req, res, next) {
 
-    var user = model.User.build(
+    var user = models.User.build(
         { login: req.body.user.login,
           name:  req.body.user.name,
           email: req.body.user.email,
@@ -74,7 +74,7 @@ exports.create = function(req, res, next) {
         });
     
     // El login debe ser unico:
-    model.User.find({where: {login: req.body.user.login}})
+    models.User.find({where: {login: req.body.user.login}})
         .success(function(existing_user) {
             if (existing_user) {
                 console.log("Error: El usuario \""+ req.body.user.login +"\" ya existe: "+existing_user.values);
@@ -162,5 +162,4 @@ exports.destroy = function(req, res, next) {
         .error(function(error) {
             next(error);
         });
-    
 };

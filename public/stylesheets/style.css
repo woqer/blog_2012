@@ -93,7 +93,6 @@ article {
     list-style: square;
 }
 
-
 .invalid_field {
   padding: 2px;
   background-color: red;
@@ -103,3 +102,4 @@ article {
 .field {
   width: 100%;
 }
+
