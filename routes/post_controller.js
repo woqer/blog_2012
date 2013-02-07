@@ -14,7 +14,7 @@ exports.load = function(req, res, next, id) {
                 req.post = post;
 		            next();
             } else {
-		req.flash('error', 'No existe el post con id='+id+'.');
+		            req.flash('error', 'No existe el post con id='+id+'.');
                 next('No existe el post con id='+id+'.');
             }
         })
@@ -174,7 +174,8 @@ exports.create = function(req, res, next) {
            req.flash('error', validate_errors[err]);
         };
 
-        res.render('posts/new', {post: post});
+        res.render('posts/new', {post: post,
+                                 validate_errors: validate_errors});
         return;
     } 
     
@@ -209,7 +210,8 @@ exports.update = function(req, res, next) {
             req.flash('error', validate_errors[err]);
         };
 
-        res.render('posts/edit', {post: req.post});
+        res.render('posts/edit', {post: req.post,
+                                  validate_errors: validate_errors});
         return;
     } 
     req.post.save(['title', 'body'])
