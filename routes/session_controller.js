@@ -1,6 +1,5 @@
 
-var model = require('../models.js'),
-    util = require('util');
+var util = require('util');
 
 
 // Middleware: Login is required:

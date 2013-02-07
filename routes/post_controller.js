@@ -1,5 +1,5 @@
 
-var model = require('../models.js');
+var models = require('../models/models.js');
 
 
 /*
@@ -7,7 +7,7 @@ var model = require('../models.js');
 */
 exports.load = function(req, res, next, id) {
 
-   model.Post
+   models.Post
         .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
@@ -47,11 +47,10 @@ exports.index = function(req, res, next) {
     var format = req.params.format || 'html';
     format = format.toLowerCase();
 
-    model.Post
-        .findAll({
-            order: 'updatedAt DESC',
-            include: ['User']
-        })
+    models.Post
+        .findAll({order: 'updatedAt DESC',
+	                include: ['User']
+	      })
         .success(function(posts) {
             switch (format) { 
               case 'html':
@@ -113,14 +112,14 @@ function posts_to_xml(posts) {
 exports.show = function(req, res, next) {
 
     // Buscar el autor
-    model.User
+    models.User
         .find({where: {id: req.post.authorId}})
         .success(function(user) {
             // Si encuentro al autor lo añado como el atributo user, sino añado {}.
             req.post.user = user || {};
 
             // Buscar comentarios
-            model.Comment
+            models.Comment
                  .findAll({where: {postId: req.post.id},
                            order: 'updatedAt DESC',
                            include: ['User'] 
@@ -133,7 +132,7 @@ exports.show = function(req, res, next) {
                     switch (format) { 
                       case 'html':
                       case 'htm':
-                          var new_comment = model.Comment.build({
+                          var new_comment = models.Comment.build({
                               body: 'Introduzca el texto del comentario'
                           });
                           res.render('posts/show', {
@@ -198,7 +197,7 @@ function post_to_xml(post) {
 // GET /posts/new
 exports.new = function(req, res, next) {
 
-    var post = model.Post.build(
+    var post = models.Post.build(
         { title:  'Introduzca el titulo',
           body: 'Introduzca el texto del articulo'
         });
@@ -209,7 +208,7 @@ exports.new = function(req, res, next) {
 // POST /posts
 exports.create = function(req, res, next) {
 
-    var post = model.Post.build(
+    var post = models.Post.build(
         { title: req.body.post.title,
           body: req.body.post.body,
           authorId: req.session.user.id
