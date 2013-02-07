@@ -22,8 +22,8 @@
 </script>
 
 
-  <div class='control-group <%- locals.validate_errors && 
-                  validate_errors.login ? "error" : "" %>'>
+  <div class='control-group <%- locals.validate_errors && validate_errors.login 
+                                ? "error" : "" %>'>
 
      <% if ( ! user.id) { %>
         <label class='control-label' for="user_login">Login:</label>
@@ -37,8 +37,8 @@
   </div>
 
 
-  <div class='control-group <%- locals.validate_errors && 
-                  validate_errors.name ? "error" : "" %>'>
+  <div class='control-group <%- locals.validate_errors && validate_errors.name 
+                                ? "error" : "" %>'>
 
     <label class='control-label' for="user_name">Nombre</label>
     <div class='controls'>
@@ -49,8 +49,8 @@
   </div>
 
 
-  <div class='control-group <%- locals.validate_errors && 
-                  validate_errors.email ? "error" : "" %>'>
+  <div class='control-group <%- locals.validate_errors && validate_errors.email 
+                                ? "error" : "" %>'>
 
     <label class='control-label' for="user_email">Email</label>
     <div class='controls'>
