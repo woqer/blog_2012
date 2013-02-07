@@ -45,7 +45,7 @@ exports.paginate = function(req, res, next, model_name, options) {
 	
 	options = options || {};
 
-	require('../models.js')[model_name].count(options)
+	require('../models/models.js')[model_name].count(options)
 	    .success(function(count) {
 		
 			var pageno = parseInt(req.query.pageno) || 1;

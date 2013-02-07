@@ -1,5 +1,5 @@
 
-var model = require('../models.js');
+var models = require('../models/models.js');
 
 var cloudinary = require('cloudinary');
 var fs = require('fs');
@@ -10,7 +10,7 @@ var path = require('path');
 */
 exports.load = function(req, res, next, id) {
 
-   model.Attachment
+   models.Attachment
         .find({where: {id: Number(id)}})
         .success(function(attachment) {
             if (attachment) {
@@ -33,7 +33,7 @@ exports.index = function(req, res, next) {
 
     console.log(req);
 
-    model.Attachment
+    models.Attachment
         .findAll({where: {postId: req.post.id},
                   order: 'updatedAt DESC'})
         .success(function(attachments) {
@@ -83,7 +83,7 @@ exports.create = function(req, res, next) {
 
         if (! result.error) {
 
-            var attachment = model.Attachment.build({
+            var attachment = models.Attachment.build({
                   public_id: result.public_id,
                   url: result.url,
                   filename: upfile.name,

@@ -1,5 +1,5 @@
 
-var model = require('../models.js');
+var models = require('../models/models.js');
 
 var userController = require('./user_controller');
 
@@ -8,7 +8,7 @@ var userController = require('./user_controller');
 */
 exports.load = function(req, res, next, id) {
 
-   model.Comment
+   models.Comment
         .find({where: {id: Number(id)}})
         .success(function(comment) {
             if (comment) {
@@ -44,7 +44,7 @@ exports.loggedUserIsAuthor = function(req, res, next) {
 // GET /posts/33/comments
 exports.index = function(req, res, next) {
 
-    model.Comment
+    models.Comment
         .findAll({where: {postId: req.post.id},
                   order: 'updatedAt DESC',
                   include: ['User']})
@@ -63,7 +63,7 @@ exports.index = function(req, res, next) {
 exports.show = function(req, res, next) {
 
    // Buscar el autor del post
-    model.User
+    models.User
         .find({where: {id: req.post.authorId}})
         .success(function(user) {
 
@@ -72,7 +72,7 @@ exports.show = function(req, res, next) {
             req.post.user = user || {};
 
             // Buscar el autor del comentario
-            model.User
+            models.User
                 .find({where: {id: req.comment.authorId}})
                 .success(function(user) {
 
@@ -97,7 +97,7 @@ exports.show = function(req, res, next) {
 // GET /posts/33/comments/new
 exports.new = function(req, res, next) {
 
-    var comment = model.Comment.build(
+    var comment = models.Comment.build(
         { body: 'Introduzca el texto del comentario'
         });
     
@@ -109,7 +109,7 @@ exports.new = function(req, res, next) {
 // POST /posts/33/comments
 exports.create = function(req, res, next) {
 
-    var comment = model.Comment.build(
+    var comment = models.Comment.build(
         { body: req.body.comment.body,
           authorId: req.session.user.id,
           postId: req.post.id
@@ -196,7 +196,7 @@ exports.destroy = function(req, res, next) {
 // GET /orphancomments
 exports.orphans = function(req, res, next) {
 
-    model.Comment
+    models.Comment
         .findAll({order: 'postId',
                   include: ['User', 'Post']})
         .success(function(comments) {

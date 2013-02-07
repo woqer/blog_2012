@@ -22,7 +22,10 @@ module.exports = {
                  allowNull: false,
                  defaultValue:'John Smith'
              },
-             email: DataTypes.STRING,
+             email: {
+                 DataTypes.STRING,
+                 notEmpty: true
+             },
              hashed_password: {
                  type: DataTypes.STRING,
                  notEmpty: true,

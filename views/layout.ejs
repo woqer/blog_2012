@@ -125,7 +125,11 @@
             </div>
           <% } %>
 
-          <%- body %>
+          <div class="row-fluid">
+            <div class="span12">
+              <%- body %>
+            </div>
+          </div>
   
           <div class="pull-right">
             <%  if (locals.paginate_view) { %>
@@ -167,11 +171,16 @@
       </div><!--/row-->
 
 
-      <hr>
+      <div class="row-fluid">
+        <div class="span12">
+          <hr>
 
-      <footer>
-        <p> &copy; Universidad Politécnica de Madrid. Curso 2012-2013. </p>
-      </footer>
+          <footer>
+            <p> &copy; Universidad Politécnica de Madrid. Curso 2012-2013. </p>
+          </footer>
+        </div>
+      </div>
+
 
     </div><!--/.fluid-container-->
 
