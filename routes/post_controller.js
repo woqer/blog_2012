@@ -1,5 +1,5 @@
 
-var model = require('../models.js');
+var models = require('../models/models.js');
 
 
 /*
@@ -7,14 +7,14 @@ var model = require('../models.js');
 */
 exports.load = function(req, res, next, id) {
 
-   model.Post
+   models.Post
         .find({where: {id: Number(id)}})
         .success(function(post) {
             if (post) {
                 req.post = post;
-		next();
+		            next();
             } else {
-		req.flash('error', 'No existe el post con id='+id+'.');
+		            req.flash('error', 'No existe el post con id='+id+'.');
                 next('No existe el post con id='+id+'.');
             }
         })
@@ -47,7 +47,7 @@ exports.index = function(req, res, next) {
     var format = req.params.format || 'html';
     format = format.toLowerCase();
 
-    model.Post
+    models.Post
         .findAll({order: 'updatedAt DESC',
 	                include: ['User']
 	      })
@@ -179,7 +179,7 @@ function post_to_xml(post) {
 // GET /posts/new
 exports.new = function(req, res, next) {
 
-    var post = model.Post.build(
+    var post = models.Post.build(
         { title:  'Introduzca el titulo',
           body: 'Introduzca el texto del articulo'
         });
@@ -190,7 +190,7 @@ exports.new = function(req, res, next) {
 // POST /posts
 exports.create = function(req, res, next) {
 
-    var post = model.Post.build(
+    var post = models.Post.build(
         { title: req.body.post.title,
           body: req.body.post.body,
           authorId: req.session.user.id
@@ -242,7 +242,7 @@ exports.update = function(req, res, next) {
         };
 
         res.render('posts/edit', {post: req.post,
-				  validate_errors: validate_errors});
+                                  validate_errors: validate_errors});
         return;
     } 
     req.post.save(['title', 'body'])
