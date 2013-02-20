@@ -77,7 +77,7 @@ exports.show = function(req, res, next) {
                 .success(function(user) {
 
                     // Añado el autor del comentario como el atributo "user".
-                    // Sino encuentro el autor uso el valor {}.
+                    // Si no encuentro el autor uso el valor {}.
                     req.comment.user = user || {};
 
                     res.render('comments/show', {
