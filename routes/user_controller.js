@@ -248,7 +248,7 @@ exports.autenticar = function(login, password, callback) {
                 if (hash == user.hashed_password) {
                     callback(null,user);
                 } else {
-                    callback('Password erroneo.');
+                    callback('Password erróneo.');
                 };
             } else {
                 callback('No existe ningún usuario registrado con ese login.');
