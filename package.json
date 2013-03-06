@@ -6,11 +6,11 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "3.0.3",
+    "express": "3.1.0",
     "ejs": "*",
-    "express-partials": "git://github.com/publicclass/express-partials.git",
+    "express-partials": "git://github.com/publicclass/express-partials.git#c9b8adde89387dea",
     "pg": "0.6.x",
-    "sequelize": "git://github.com/sdepold/sequelize.git",
+    "sequelize": "git://github.com/sdepold/sequelize.git#7357b7cc5052fcae92df",
     "connect-flash": "*",
     "cloudinary": "",
     "xmlbuilder": "0.4.2",
