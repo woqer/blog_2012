@@ -47,7 +47,7 @@ exports.index = function(req, res, next) {
     models.Comment
         .findAll({where: {postId: req.post.id},
                   order: 'updatedAt DESC',
-                  include: ['User']})
+                  include: [ {model: models.User, as: 'Author'} ]})
         .success(function(comments) {
             res.render('comments/index', {
                 comments: comments,
@@ -67,18 +67,18 @@ exports.show = function(req, res, next) {
         .find({where: {id: req.post.authorId}})
         .success(function(user) {
 
-            // Añado el autor del post como el atributo "user". 
+            // Añado el autor del post como el atributo "author". 
             // Si no encuentro el autor uso el valor {}.
-            req.post.user = user || {};
+            req.post.author = user || {};
 
             // Buscar el autor del comentario
             models.User
                 .find({where: {id: req.comment.authorId}})
                 .success(function(user) {
 
-                    // Añado el autor del comentario como el atributo "user".
+                    // Añado el autor del comentario como el atributo "author".
                     // Si no encuentro el autor uso el valor {}.
-                    req.comment.user = user || {};
+                    req.comment.author = user || {};
 
                     res.render('comments/show', {
                         comment: req.comment,
@@ -198,7 +198,8 @@ exports.orphans = function(req, res, next) {
 
     models.Comment
         .findAll({order: 'postId',
-                  include: ['User', 'Post']})
+                  include: [ {model: models.User, as: 'Author'},
+                             {model: models.Post, as: 'Post'} ]})
         .success(function(comments) {
 
             console.log(comments);

@@ -49,9 +49,12 @@ exports.index = function(req, res, next) {
 
     models.Post
         .findAll({order: 'updatedAt DESC',
-	                include: ['User']
+	                include: [ { model: models.User, as: 'Author' } ]
 	      })
         .success(function(posts) {
+
+          console.log(posts);
+          
             switch (format) { 
               case 'html':
               case 'htm':
@@ -115,8 +118,9 @@ exports.show = function(req, res, next) {
     models.User
         .find({where: {id: req.post.authorId}})
         .success(function(user) {
-            // Si encuentro al autor lo añado como el atributo user, sino añado {}.
-            req.post.user = user || {};
+
+            // Si encuentro al autor lo añado como el atributo author, sino añado {}.
+            req.post.author = user || {};
 
             // Buscar Adjuntos
             req.post.getAttachments({order: 'updatedAt DESC'})
@@ -126,7 +130,7 @@ exports.show = function(req, res, next) {
                   models.Comment
                        .findAll({where: {postId: req.post.id},
                                  order: 'updatedAt DESC',
-                                 include: ['User'] 
+                                 include: [ { model: models.User, as: 'Author' } ] 
                        })
                        .success(function(comments) {
 

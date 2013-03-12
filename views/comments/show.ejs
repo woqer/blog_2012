@@ -1,7 +1,7 @@
 <h2>Comentario</h2>
 
 <p>
-  <em><%= comment.user.name || 'Sin autor' %></em>
+  <em><%= comment.author && comment.author.name || 'Sin autor' %></em>
 </p>
 
 <p>
