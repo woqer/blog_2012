@@ -4,7 +4,7 @@
     <div class="page-header">
       <h1>
         <%= post.title %>
-        <small>por <em> <%= post.user.name || "Sin autor" %> </em></small>
+        <small>por <em> <%= post.author && post.author.name || "Sin autor" %> </em></small>
       </h1>
      <em> <%= post.updatedAt.toLocaleDateString() %></em>
    </div>
