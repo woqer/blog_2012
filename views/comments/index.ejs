@@ -5,7 +5,7 @@
 <% for (var i in comments) { %>
   <article>
      <header>
-        <em> <%= comments[i].user.name || "Sin autor" %> </em>
+        <em> <%= comments[i].author && comments[i].author.name || "Sin autor" %> </em>
         <p>
           <%= comments[i].updatedAt.toLocaleDateString() %>
         </p>

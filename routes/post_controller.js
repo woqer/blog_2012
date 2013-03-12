@@ -126,7 +126,7 @@ exports.show = function(req, res, next) {
             models.Comment
                  .findAll({where: {postId: req.post.id},
                            order: 'updatedAt DESC',
-                           include: ['User'] 
+                           include: [ { model: models.User, as: 'Author' } ] 
                  })
                  .success(function(comments) {
 

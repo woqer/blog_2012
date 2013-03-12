@@ -48,7 +48,7 @@ Post.hasMany(Comment, {foreignKey: 'postId'});
 Post.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
 
 Comment.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
-Comment.belongsTo(Post, {foreignKey: 'postId'});
+Comment.belongsTo(Post, {as: 'Post', foreignKey: 'postId'});
 
 
 // Exportar los modelos:
