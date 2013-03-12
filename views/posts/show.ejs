@@ -5,7 +5,7 @@
 <p>
   <b><%= post.title %></b>
   <br />
-  <em><%= post.user.name || 'Sin autor' %></em>
+  <em><%= post.author && post.author.name || 'Sin autor' %></em>
 </p>
 
 <p>
