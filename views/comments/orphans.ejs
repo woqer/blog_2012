@@ -4,10 +4,10 @@
 
 <% for (var i in comments) { %>
 
-  <% var post = comments[i].post %>
-  <% var user = comments[i].user %>
+  <% var post = comments[i].post || {} %>
+  <% var author = comments[i].author || {} %>
 
-  <% if (!post.id || !user.id) { %>
+  <% if (!post.id || !author.id) { %>
 
 	  <article>
 	    <header>
@@ -15,7 +15,7 @@
     	        <em> <%= post.title || "Sin articulo" %> </em>
 	        </p>
 	        <p>
-	            <em> <%= user.name || "Sin autor" %> </em>
+	            <em> <%= author.name || "Sin autor" %> </em>
 	        </p>
 	        <p>
 	          <%= comments[i].updatedAt.toLocaleDateString() %>

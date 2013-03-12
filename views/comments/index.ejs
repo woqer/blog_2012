@@ -9,7 +9,7 @@
 
 <% for (var i in comments) { %>
   <div class="comment">
-        <strong> <%= comments[i].user.name || "Sin autor" %> </strong> comentó:
+        <strong> <%= comments[i].author && comments[i].author.name || "Sin autor" %> </strong> comentó:
         <em class="pull-right">
           <%= comments[i].updatedAt.toLocaleDateString() %>
         </em>
