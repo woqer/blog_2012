@@ -8,10 +8,7 @@ var crypto = require('crypto');
 exports.load = function(req, res, next, id) {
 
    models.User
-        .find({
-            where: {id: Number(id)},
-            attributes: ['id','login','name','email','updatedAt','createdAt']
-        })
+        .find({where: {id: Number(id)}})
         .success(function(user) {
             if (user) {
                 req.user = user;
@@ -34,9 +31,7 @@ exports.load = function(req, res, next, id) {
 exports.index = function(req, res, next) {
 
     models.User
-        .findAll({order: 'name',
-                  attributes: ['id', 'login', 'name', 'email']
-                 })
+        .findAll({order: 'name'})
         .success(function(users) {
             res.render('users/index', {
                 users: users
@@ -159,9 +154,9 @@ exports.update = function(req, res, next) {
     // ¿Cambio el password?
     if (req.body.user.password) {
         console.log('Hay que actualizar el password');
-        fields_to_update.salt = createNewSalt();
-        fields_to_update.hashed_password = encriptarPassword(req.body.user.password, 
-                                                             fields_to_update.salt);
+        req.user.salt = createNewSalt();
+        req.user.hashed_password = encriptarPassword(req.body.user.password, 
+                                                             req.user.salt);
         fields_to_update.push('salt');
         fields_to_update.push('hashed_password');
     }
