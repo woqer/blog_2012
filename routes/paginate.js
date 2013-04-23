@@ -1,5 +1,5 @@
 
-var yapaginate = require('nodejs-yapaginate');
+var yapaginate = require('nodejs-yapaginate/lib/main.js');
 
 /*
 *  La funcion asignada a este atributo se usa para facilitar la paginacion.
