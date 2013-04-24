@@ -1,9 +1,9 @@
 
 
-var confirmarSubmit = function(msg,form) {
+var confirmarSubmit = function(msg,form_name) {
 
    if (confirm(msg)) {
-      form.submit();
+      document.all[form_name].submit();
    }
    return false;
 }
