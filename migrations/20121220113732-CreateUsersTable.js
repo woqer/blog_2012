@@ -50,7 +50,7 @@ module.exports = {
        .complete(done);
 
   },
-  down: function(migration, done) {
+  down: function(migration, DataTypes, done) {
     // add reverting commands here
 
     migration.dropTable('Users')
