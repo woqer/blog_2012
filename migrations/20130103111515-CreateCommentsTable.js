@@ -1,5 +1,5 @@
 module.exports = {
-  up: function(migration, DataTypes) {
+  up: function(migration, DataTypes, done) {
     // add altering commands here
 
     migration.createTable(
@@ -33,17 +33,16 @@ module.exports = {
                 allowNull: false
             }
         },
-        {
-            sync: {
-                force:true
-            }
-        });
+        { sync: {force:true}
+        })
+      .complete(done);
 
   },
-  down: function(migration) {
+  down: function(migration, done) {
     // add reverting commands here
 
-     migration.dropTable('Comments');
+     migration.dropTable('Comments')
+         .complete(done);
 
   }
 }
