@@ -1,5 +1,5 @@
 module.exports = {
-  up: function(migration, DataTypes) {
+  up: function(migration, DataTypes, done) {
     // add altering commands here
 
      migration.createTable(
@@ -23,7 +23,7 @@ module.exports = {
                  defaultValue:'John Smith'
              },
              email: {
-                 DataTypes.STRING,
+                 type: DataTypes.STRING,
                  notEmpty: true
              },
              hashed_password: {
@@ -45,19 +45,16 @@ module.exports = {
                  allowNull: false
              }
           },
-          {
-              sync: {
-                  force: true
-              }
-          });
+          { sync: {force:true}
+          })
+       .complete(done);
 
   },
-  down: function(migration) {
+  down: function(migration, DataTypes, done) {
     // add reverting commands here
 
-    migration.dropTable(
-          'Users'
-      );
+    migration.dropTable('Users')
+          .complete(done);
 
   }
 }

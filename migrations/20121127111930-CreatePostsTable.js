@@ -1,5 +1,5 @@
 module.exports = {
-  up: function(migration, DataTypes) {
+  up: function(migration, DataTypes, done) {
     // add altering commands here
     migration.createTable(
       'Posts', {  id: { type: DataTypes.INTEGER,
@@ -18,13 +18,13 @@ module.exports = {
                         allowNull: false },
            updatedAt: { type: DataTypes.DATE,
                         allowNull: false }
-      }, { sync: {force:true} });
+      }, { sync: {force:true} })
+    .complete(done);;
 
   },
-  down: function(migration) {
+  down: function(migration, DataTypes, done) {
     // add reverting commands here
-      migration.dropTable(
-        'Posts'
-      );
+      migration.dropTable('Posts')
+        .complete(done);
   }
 }
