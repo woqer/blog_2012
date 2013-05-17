@@ -13,7 +13,7 @@ exports.index = function(req, res, next) {
 
     models.Post
         .findAll({where:["title like ? OR body like ?",texto,texto],
-                  order:"updatedAtDESC"})
+                  order:"updatedAt DESC"})
         .success(function(posts) {
             switch (format) { 
               case 'html':
