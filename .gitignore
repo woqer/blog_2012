@@ -5,3 +5,4 @@ config.json
 .env
 blog.sqlite
 .env
+config/config.json
