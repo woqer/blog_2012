@@ -19,4 +19,3 @@ var sequelize = new Sequelize(process.env.DATABASE_NAME,
 // Y que este modulo exporta la clase Post:
 
 exports.Post = sequelize.import(path.join(__dirname,'post'));
-
