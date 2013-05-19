@@ -12,6 +12,13 @@
     <nav>
       <a href="/">Home</a>
       <a href="/Posts">Posts</a>
+      <p>
+        <form method='GET' action='/posts/search'>
+          <input type="text" id="post_search" 
+                  name="search" size='80' value='Busca...' />
+          <input name="commit" type="submit" value="Buscar" />
+        </form>
+      </p>
     </nav>
   </header>
        
@@ -23,6 +30,7 @@
 
   <footer>
     <p> Universidad Politécnica de Madrid. Curso 2012-2013. </p>
+    <%= visitas %>
   </footer>
 </body>
 </html>
