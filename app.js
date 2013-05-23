@@ -12,14 +12,15 @@ var express = require('express')
   , postController = require('./routes/post_controller.js')
   , userController = require('./routes/user_controller.js')
   , commentController = require('./routes/comment_controller.js')
-  , caduca = require('./caduca');
+  , caduca = require('./caduca.js')
+  , count = require('./count.js');
 
 var util = require('util');
 
 var app = express();
 
 app.use(partials());
-app.use(caduca);
+app.use(count.getCount());
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -45,6 +46,9 @@ app.configure(function(){
 
      next();
   });
+
+  //Control de caducidad de sesiones
+  app.use(caduca());
 
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
@@ -175,6 +179,7 @@ app.put('/users/:userid([0-9]+)',
         sessionController.requiresLogin,
 	userController.loggedUserIsUser,
         userController.update);
+
 
 // app.delete('/users/:userid([0-9]+)', 
 //        sessionController.requiresLogin,
