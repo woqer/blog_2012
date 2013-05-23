@@ -28,6 +28,5 @@ module.exports = function(sequelize, DataTypes) {
         salt: {
             type: DataTypes.STRING
         }
-        
     });
 }
