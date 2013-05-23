@@ -11,13 +11,15 @@ var express = require('express')
   , sessionController = require('./routes/session_controller.js')
   , postController = require('./routes/post_controller.js')
   , userController = require('./routes/user_controller.js')
-  , commentController = require('./routes/comment_controller.js');
+  , commentController = require('./routes/comment_controller.js')
+  , caduca = require('./caduca');
 
 var util = require('util');
 
 var app = express();
 
 app.use(partials());
+app.use(caduca);
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
