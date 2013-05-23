@@ -11,7 +11,7 @@ module.exports = function() {
 			if (req.session.user.time < (time-60000)) {
 				//Cerrar la sesión y notificar por flash
 				delete req.session.user;
-    			req.flash('error', 'La sesión ha caducado');
+    			req.flash('info', 'La sesión ha caducado');
     			res.redirect("/login");
 				console.log("¡¡¡Sesion caducada!!!");
 			} else if (req.session.user) {

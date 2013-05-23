@@ -47,6 +47,9 @@ exports.index = function(req, res, next) {
     var format = req.params.format || 'html';
     format = format.toLowerCase();
 
+    // Cuenta comentarios en el Post
+    var numComments = 0;
+
     models.Post
         .findAll({order: 'updatedAt DESC',
 	                include: [ { model: models.User, as: 'Author' } ]
@@ -54,12 +57,23 @@ exports.index = function(req, res, next) {
         .success(function(posts) {
 
           console.log(posts);
+
+          models.Comment
+          .count({where: {postId: posts.id}})
+          .success(function(c){
+            numComments = c;
+          })
+          .error(function(error) {
+            next(error);
+          });
+
           
             switch (format) { 
               case 'html':
               case 'htm':
                   res.render('posts/index', {
-                    posts: posts
+                    posts: posts,
+                    numComments: numComments
                   });
                   break;
               case 'json':
@@ -113,6 +127,16 @@ function posts_to_xml(posts) {
 
 // GET /posts/33
 exports.show = function(req, res, next) {
+    // Cuenta comentarios en el Post
+    var numComments = 0;
+    models.Comment
+        .count({where: {postId: req.post.id}})
+        .success(function(c){
+          numComments = c;
+        })
+        .error(function(error) {
+          next(error);
+        });
 
     // Buscar el autor
     models.User
@@ -142,7 +166,8 @@ exports.show = function(req, res, next) {
                           res.render('posts/show', {
                               post: req.post,
                               comments: comments,
-                              comment: new_comment
+                              comment: new_comment,
+                              numComments: numComments
                           });
                           break;
                       case 'json':
