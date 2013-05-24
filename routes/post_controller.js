@@ -47,8 +47,7 @@ exports.index = function(req, res, next) {
     var format = req.params.format || 'html';
     format = format.toLowerCase();
 
-    // Cuenta comentarios en el Post
-    var numComments = 0;
+    var comments;
 
     models.Post
         .findAll({order: 'updatedAt DESC',
@@ -59,21 +58,14 @@ exports.index = function(req, res, next) {
           console.log(posts);
 
           models.Comment
-          .count({where: {postId: posts.id}})
-          .success(function(c){
-            numComments = c;
-          })
-          .error(function(error) {
-            next(error);
-          });
-
+          .findAll().success(function(comments) {
           
             switch (format) { 
               case 'html':
               case 'htm':
                   res.render('posts/index', {
                     posts: posts,
-                    numComments: numComments
+                    comments: comments
                   });
                   break;
               case 'json':
@@ -91,6 +83,11 @@ exports.index = function(req, res, next) {
                   console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
                   res.send(406);
             }
+
+          })
+          .error(function(error) {
+            next(error);
+          });
         })
         .error(function(error) {
             next(error);

@@ -17,9 +17,16 @@
 
      <footer>
 
-      <p>
-      Comentarios: <%= numComments %>
-      </p>
+      Comentarios: 
+      
+      <% var numComments = 0; %>
+      <% for (var j in comments) { %>
+        <% if (comments[j].postId == posts[i].id) { %>
+            <% numComments++; %>
+        <% } %>
+      <% } %>
+
+      <%= numComments %>
 
       <% if (session.user && session.user.id == posts[i].authorId) {%>
 
