@@ -344,7 +344,9 @@ exports.search = function(req, res, next) {
 
     models.Post
         .findAll({where:["title like ? OR body like ?",texto,texto],
-                  order:"updatedAt DESC"})
+                  order:"updatedAt DESC",
+                  include: [ { model: models.User, as: 'Author' } ]
+        })
         .success(function(posts) {
           
           models.Comment
