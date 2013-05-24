@@ -144,6 +144,7 @@ app.get('/posts/new',
         postController.new);
 
 app.get('/posts/:postid([0-9]+).:format?', postController.show);
+
 app.post('/posts', 
 	sessionController.requiresLogin,
         postController.create);
@@ -180,10 +181,8 @@ app.put('/users/:userid([0-9]+)',
 	userController.loggedUserIsUser,
         userController.update);
 
+app.get('/posts/search', postController.search);
 
-// app.delete('/users/:userid([0-9]+)', 
-//        sessionController.requiresLogin,
-//           userController.destroy);
 
 //---------------------
 

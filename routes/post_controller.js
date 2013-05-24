@@ -47,8 +47,6 @@ exports.index = function(req, res, next) {
     var format = req.params.format || 'html';
     format = format.toLowerCase();
 
-    var comments;
-
     models.Post
         .findAll({order: 'updatedAt DESC',
 	                include: [ { model: models.User, as: 'Author' } ]
@@ -329,4 +327,60 @@ exports.destroy = function(req, res, next) {
        .error(function(error) {
            next(error);
        });
+};
+
+function quita_espacios(text) {
+     var resultado = "%"+text.replace(/\s/g, '%')+"%";
+     return resultado;
+}
+
+// GET /posts/search
+exports.search = function(req, res, next) {
+
+    var format = req.params.format || 'html';
+    var texto = req.param('search') || ' ';
+    format = format.toLowerCase();
+    texto = quita_espacios(texto);
+
+    models.Post
+        .findAll({where:["title like ? OR body like ?",texto,texto],
+                  order:"updatedAt DESC"})
+        .success(function(posts) {
+          
+          models.Comment
+          .findAll().success(function(comments) {
+          
+            switch (format) { 
+              case 'html':
+              case 'htm':
+                  res.render('posts/index', {
+                    posts: posts,
+                    comments: comments
+                  });
+                  break;
+              case 'json':
+                  res.send(posts);
+                  break;
+              case 'xml':
+                  res.send(posts_to_xml(posts));
+                  break;
+              case 'txt':
+                  res.send(posts.map(function(post) {
+                      return post.title+' ('+post.body+')';
+                  }).join('\n'));
+                  break;
+              default:
+                  console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
+                  res.send(406);
+            }
+
+          })
+          .error(function(error) {
+            next(error);
+          });
+        })
+        .error(function(error) {
+            console.log("Error: No puedo listar los posts.");
+            res.redirect('/');
+        });
 };
