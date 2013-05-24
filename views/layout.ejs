@@ -24,6 +24,9 @@
       <a href="/">Home</a>
       <a href="/posts">Posts</a>
       <a href="/users">Usuarios</a>
+      <% if (session.user) { %>
+        <a href="/users/:userid/favourites">Favoritos</a>
+      <% } %>
       <p>
         <form method='GET' action='/posts/search'>
           <input type="text" id="post_search" 

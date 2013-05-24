@@ -13,7 +13,8 @@ var express = require('express')
   , userController = require('./routes/user_controller.js')
   , commentController = require('./routes/comment_controller.js')
   , caduca = require('./caduca.js')
-  , count = require('./count.js');
+  , count = require('./count.js')
+  , favoritesController = require('./routes/favorites_controller.js');
 
 var util = require('util');
 
@@ -93,6 +94,7 @@ app.get('/', routes.index);
 app.param('postid', postController.load);
 app.param('userid', userController.load);
 app.param('commentid', commentController.load);
+//app.param('favoriteid', favoritesController.load);
 
 //---------------------
 
@@ -182,6 +184,20 @@ app.put('/users/:userid([0-9]+)',
         userController.update);
 
 app.get('/posts/search', postController.search);
+
+//---------------------FAVORITOS
+app.get('/users/:userid/favourites',
+        sessionController.requiresLogin,
+        userController.loggedUserIsUser,
+        favoritesController.index);
+app.put('/users/:userid/favourites/:postid',
+        sessionController.requiresLogin,
+        userController.loggedUserIsUser,
+        favoritesController.create);
+app.delete('/users/:userid/favourites/:postid',
+        sessionController.requiresLogin,
+        userController.loggedUserIsUser,
+        favoritesController.destroy);
 
 
 //---------------------

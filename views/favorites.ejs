@@ -1,0 +1,53 @@
+<header>
+  <h2> Favoritos </h2>
+</header>
+
+<% for (var i in favorites) { %>
+  <% for (var j in posts) { %>
+    <% if (favorites[i].postId == posts[j].id) { %>
+      <article>
+         <header>
+            <h3>
+              <a href='/posts/<%= posts[i].id %>' class='titlelink'> <%= posts[i].title %> </a>
+            </h3>
+            <em> <%= posts[i].author && posts[i].author.name || "Sin autor" %> </em>
+         </header>
+         
+         <p>
+            <%= posts[i].body.slice(0,300) %> ... 
+         </p>
+
+         <footer>
+
+          Comentarios: 
+          
+          <% var numComments = 0; %>
+          <% for (var j in comments) { %>
+            <% if (comments[j].postId == posts[i].id) { %>
+                <% numComments++; %>
+            <% } %>
+          <% } %>
+
+          <%= numComments %>
+
+          <% if (session.user && session.user.id == posts[i].authorId) {%>
+
+            <form method='post' action='/posts/<%= posts[i].id %>'>
+              <input type='hidden' name='_method' value='delete'>
+              <a href="/posts/<%= posts[i].id %>/edit"> Editar </a> 
+              <a href="" onclick="submit();return false"> Borrar </a>  
+            </form>
+
+          <% } %>
+
+         </footer>
+      </article>
+
+    <% } %>
+  <% } %>
+<%  }; %>
+<footer>
+  <nav>
+    <a href="/posts/new"> Crear nuevo Post </a>
+  </nav>
+</footer>

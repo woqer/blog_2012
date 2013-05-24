@@ -22,6 +22,7 @@ var sequelize = new Sequelize(process.env.DATABASE_NAME,
 var Post = sequelize.import(path.join(__dirname,'post'));
 var User = sequelize.import(path.join(__dirname,'user'));
 var Comment = sequelize.import(path.join(__dirname,'comment'));
+var Favorite = sequelize.import(path.join(__dirname,'favorite'));
 
 // Relaciones
 
@@ -55,5 +56,6 @@ Comment.belongsTo(Post, {foreignKey: 'postId'});
 exports.Post = Post;
 exports.User = User;
 exports.Comment = Comment;
+exports.Favorite = Favorite;
 
 sequelize.sync(); //syncs database, it creates a new one if it doesn't exist

@@ -18,6 +18,20 @@
   <a href="/posts/<%= post.id %>/edit"> Editar </a>
 <% } %>
 
+<% if (session.user) { %>
+  <% if (favorite.postId == post.id) { %>
+  	<form method='post' action='/users/<%= post.authorId %>/favourites/<% post.id %>'>
+  		<inpute type='hidden' name='_method' value='delete'>
+  		<input name="commit" type="submit" value="Favorito-quitar" />
+  	</form>
+  <% } else { %>
+  	<form method='post' action='/users/<%= post.authorId %>/favourites/<% post.id %>'>
+  		<inpute type='hidden' name='_method' value='put'>
+  		<input name="commit" type="submit" value="Favorito-añadir" />
+  	</form>
+  <% } %>
+<% } %>
+
 <p>
 Comentarios: <%= numComments %>
 </p>
