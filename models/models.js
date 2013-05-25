@@ -38,6 +38,9 @@ User.hasMany(Post, {foreignKey: 'authorId'});
 User.hasMany(Comment, {foreignKey: 'authorId'});
 Post.hasMany(Comment, {foreignKey: 'postId'});
 
+User.hasMany(Favorite, {foreignkey: 'userId'});
+Post.hasMany(Favorite, {foreignkey: 'postId'});
+
 // La llamada Post.belongsTo(User);
 //  - crea en el modelo de Post un atributo llamado UserId,
 //  - y en el prototipo de Post se crean los metodos getUser y setUser.
@@ -50,6 +53,9 @@ Post.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
 
 Comment.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
 Comment.belongsTo(Post, {foreignKey: 'postId'});
+
+Favorite.belongsTo(User, {foreignkey: 'userId'});
+Favorite.belongsTo(Post, {foreignkey: 'postId'});
 
 
 // Exportar los modelos:
