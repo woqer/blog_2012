@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
       { userId: {
             type: DataTypes.INTEGER,
             validate: {
-                notEmpty: { msg: "El campo authorId no puede estar vacío" }
+                notEmpty: { msg: "El campo userId no puede estar vacío" }
             }
         },
         postId: {

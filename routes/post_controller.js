@@ -162,7 +162,8 @@ exports.show = function(req, res, next) {
                               post: req.post,
                               comments: comments,
                               comment: new_comment,
-                              numComments: numComments
+                              numComments: numComments,
+                              favorite: req.favorite
                           });
                           break;
                       case 'json':

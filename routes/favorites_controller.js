@@ -31,10 +31,9 @@ exports.index = function(req, res, next) {
 
     var format = req.params.format || 'html';
     format = format.toLowerCase();
-    var userId = req.session.user.id;
 
     models.Favorite
-        .findAll({where:["userId like ?",userId]})
+        .findAll({where: {userId: req.user.id}})
         .success(function(favorites) {
 
             models.Post
@@ -42,7 +41,7 @@ exports.index = function(req, res, next) {
             .success(function(posts) {
 
               models.Comment
-              .findAll().succes(function(comments) {
+              .findAll().success(function(comments) {
                 switch (format) { 
                   case 'html':
                   case 'htm':
