@@ -19,7 +19,7 @@
 <% } %>
 
 <% if (session.user) { %>
-  <% if (favorite.postId == post.id) { %>
+  <% if (favorite) { %>
   	<form method='post' action='/users/<%= session.user.id %>/favourites/<% post.id %>'>
   		<inpute type='hidden' name='_method' value='delete'>
   		<input name="commit" type="submit" value="Favorito-quitar" />

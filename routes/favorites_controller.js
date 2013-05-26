@@ -6,16 +6,20 @@ var models = require('../models/models.js');
 *  Auto-loading con app.param
 */
 exports.load = function(req, res, next, id) {
-
+    var separador = '======> ';
+    console.log (separador + 'favoriteController.load cargado');
    models.Favorite
-        .find({where: {id: Number(id)}})
+        .find({where: {postId: Number(id)}})
         .success(function(favorite) {
+            console.log (separador + 'success del Favorite find');
             if (favorite) {
+                console.log (separador + 'if(favorite) funciona: ' + favorite);
                 req.favorite = favorite;
                 next();
             } else {
-                req.flash('error', 'No existe el favorito con id='+id+'.');
-                next('No existe el favorito con id='+id+'.');
+                console.log (separador + 'favorite no encontrado, salta el else');
+                //req.flash('error', 'No existe el favorito con postId='+id+'.');
+                next();
             }
         })
         .error(function(error) {
@@ -78,7 +82,7 @@ exports.index = function(req, res, next) {
 
 // PUT  /users/:userid/favourites/:postid
 exports.create = function(req, res, next) {
-
+    console.log(separador + 'se entra en favorite.create');
     var favorite = models.Favorite.build(
         { userId: req.session.user.id,
           postId: req.body.post.id
@@ -93,7 +97,7 @@ exports.create = function(req, res, next) {
            req.flash('error', validate_errors[err]);
         };
 
-        res.render(req.url, {favorite: favorite,
+        res.render('posts/show', {favorite: favorite,
                                  validate_errors: validate_errors});
         return;
     } 
@@ -101,7 +105,7 @@ exports.create = function(req, res, next) {
     favorite.save()
         .success(function() {
             req.flash('success', 'Post agregado a favoritos.');
-            res.redirect(req.url);
+            res.redirect('/posts');
         })
         .error(function(error) {
             next(error);

@@ -6,7 +6,6 @@ var models = require('../models/models.js');
 *  Auto-loading con app.param
 */
 exports.load = function(req, res, next, id) {
-
    models.Post
         .find({where: {id: Number(id)}})
         .success(function(post) {
@@ -53,7 +52,7 @@ exports.index = function(req, res, next) {
 	      })
         .success(function(posts) {
 
-          console.log(posts);
+          //console.log(posts);
 
           models.Comment
           .findAll().success(function(comments) {
@@ -158,6 +157,8 @@ exports.show = function(req, res, next) {
                           var new_comment = models.Comment.build({
                               body: 'Introduzca el texto del comentario'
                           });
+                          console.log('======> ' +
+                            'Variable req.favorite: ' + req.favorite);
                           res.render('posts/show', {
                               post: req.post,
                               comments: comments,

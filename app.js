@@ -91,10 +91,10 @@ app.get('/', routes.index);
 
 // Auto-Loading:
 
-app.param('postid', postController.load);
-app.param('userid', userController.load);
+app.param('postid', postController.load, favoritesController.load);
+app.param('userid', userController.load); //, favoritesController.load);
 app.param('commentid', commentController.load);
-app.param('favoriteid', favoritesController.load);
+//app.param('favoriteid', favoritesController.load);
 
 //---------------------
 
@@ -186,15 +186,15 @@ app.put('/users/:userid([0-9]+)',
 app.get('/posts/search', postController.search);
 
 //---------------------FAVORITOS
-app.get('/users/:userid/favourites',
+app.get('/users/:userid([0-9]+)/favourites',
         sessionController.requiresLogin,
         userController.loggedUserIsUser,
         favoritesController.index);
-app.put('/users/:userid/favourites/:postid',
+app.put('/users/:userid([0-9]+)/favourites/:postid([0-9]+)',
         sessionController.requiresLogin,
         userController.loggedUserIsUser,
         favoritesController.create);
-app.delete('/users/:userid/favourites/:postid',
+app.delete('/users/:userid([0-9]+)/favourites/:postid([0-9]+)',
         sessionController.requiresLogin,
         userController.loggedUserIsUser,
         favoritesController.destroy);
