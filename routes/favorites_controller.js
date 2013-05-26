@@ -41,7 +41,9 @@ exports.index = function(req, res, next) {
         .success(function(favorites) {
 
             models.Post
-            .findAll({order: 'updatedAt DESC'})
+            .findAll({order: 'updatedAt DESC',
+                      include: [ { model: models.User, as: 'Author' } ]
+            })
             .success(function(posts) {
 
               models.Comment
@@ -51,7 +53,8 @@ exports.index = function(req, res, next) {
                   case 'htm':
                       res.render('favorites', {
                         posts: posts,
-                        favorites : favorites
+                        favorites: favorites,
+                        comments: comments
                       });
                       break;
                   case 'json':
@@ -82,10 +85,10 @@ exports.index = function(req, res, next) {
 
 // PUT  /users/:userid/favourites/:postid
 exports.create = function(req, res, next) {
-    console.log(separador + 'se entra en favorite.create');
+    console.log('======> se entra en favorite.create');
     var favorite = models.Favorite.build(
         { userId: req.session.user.id,
-          postId: req.body.post.id
+          postId: req.post.id
         });
     
     var validate_errors = favorite.validate();
@@ -114,33 +117,23 @@ exports.create = function(req, res, next) {
 
 // DELETE  /users/:userid/favourites/:postid
 exports.destroy = function(req, res, next) {
-
+    
+    console.log('======> entro en DESTROY');
     var Sequelize = require('sequelize');
     var chainer = new Sequelize.Utils.QueryChainer
 
-    // Obtener los favoritos del usuario
-    req.user.getFavorites()
-       .success(function(favorites) {
+    chainer.add(req.favorite.destroy());
 
-          for (var i in favorites) {
-            if (favorites[i].postId == req.post.id) {
-              chainer.add(req.favorite.destroy);
-            }
-          }
-
-           // Ejecutar el chainer
-           chainer.run()
-            .success(function(){
-                 req.flash('success', 'Post eliminado de favoritos.');
-                 res.redirect(req.url);
-            })
-            .error(function(errors){
-                next(errors[0]);   
-            })
-       })
-       .error(function(error) {
-           next(error);
-       });
+     // Ejecutar el chainer
+     chainer.run()
+      .success(function(){
+           req.flash('success', 'Post eliminado de favoritos.');
+           res.redirect('/posts');
+      })
+      .error(function(errors){
+          next(errors[0]);   
+      })
+      
 };
 
 // function quita_espacios(text) {

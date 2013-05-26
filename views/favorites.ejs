@@ -2,9 +2,9 @@
   <h2> Favoritos </h2>
 </header>
 
-<% for (var i in favorites) { %>
-  <% for (var j in posts) { %>
-    <% if (favorites[i].postId == posts[j].id) { %>
+<% for (var k in favorites) { %>
+  <% for (var i in posts) { %>
+    <% if (favorites[k].postId == posts[i].id) { %>
       <article>
          <header>
             <h3>
@@ -45,7 +45,7 @@
 
     <% } %>
   <% } %>
-<%  }; %>
+<%  } %>
 <footer>
   <nav>
     <a href="/posts/new"> Crear nuevo Post </a>

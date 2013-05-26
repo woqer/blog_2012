@@ -56,30 +56,41 @@ exports.index = function(req, res, next) {
 
           models.Comment
           .findAll().success(function(comments) {
+
+            models.favorite
+            .findAll({where: {userID: req.session.user.id}
+            })
+            .success(function(favorites) {
           
-            switch (format) { 
-              case 'html':
-              case 'htm':
-                  res.render('posts/index', {
-                    posts: posts,
-                    comments: comments
-                  });
-                  break;
-              case 'json':
-                  res.send(posts);
-                  break;
-              case 'xml':
-                  res.send(posts_to_xml(posts));
-                  break;
-              case 'txt':
-                  res.send(posts.map(function(post) {
-                      return post.title+' ('+post.body+')';
-                  }).join('\n'));
-                  break;
-              default:
-                  console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
-                  res.send(406);
-            }
+              switch (format) { 
+                case 'html':
+                case 'htm':
+                    res.render('posts/index', {
+                      posts: posts,
+                      comments: comments,
+                      favorites: favorites
+                    });
+                    break;
+                case 'json':
+                    res.send(posts);
+                    break;
+                case 'xml':
+                    res.send(posts_to_xml(posts));
+                    break;
+                case 'txt':
+                    res.send(posts.map(function(post) {
+                        return post.title+' ('+post.body+')';
+                    }).join('\n'));
+                    break;
+                default:
+                    console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
+                    res.send(406);
+              }
+
+            })
+            .error(function(err){
+              next(error);
+            });
 
           })
           .error(function(error) {
@@ -301,7 +312,6 @@ exports.update = function(req, res, next) {
 
 // DELETE /posts/33
 exports.destroy = function(req, res, next) {
-
     var Sequelize = require('sequelize');
     var chainer = new Sequelize.Utils.QueryChainer
 
