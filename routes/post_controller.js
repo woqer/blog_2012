@@ -45,10 +45,10 @@ exports.index = function(req, res, next) {
 
     var format = req.params.format || 'html';
     format = format.toLowerCase();
+    
     var userId = '0';
-
     if (req.session.user) {
-      console.log('======> Existe req.session');
+      console.log('======> Existe req.session.user');
       userId = req.session.user.id;
     }
 
@@ -359,6 +359,12 @@ exports.search = function(req, res, next) {
     format = format.toLowerCase();
     texto = quita_espacios(texto);
 
+    var userId = '0';
+    if (req.session.user) {
+      console.log('======> Existe req.session.user');
+      userId = req.session.user.id;
+    }
+
     models.Post
         .findAll({where:["title like ? OR body like ?",texto,texto],
                   order:"updatedAt DESC",
@@ -368,30 +374,40 @@ exports.search = function(req, res, next) {
           
           models.Comment
           .findAll().success(function(comments) {
+
+            models.Favorite
+            .findAll({where: {userId: Number(userId)}})
+            .success(function(favorites) {
           
-            switch (format) { 
-              case 'html':
-              case 'htm':
-                  res.render('posts/index', {
-                    posts: posts,
-                    comments: comments
-                  });
-                  break;
-              case 'json':
-                  res.send(posts);
-                  break;
-              case 'xml':
-                  res.send(posts_to_xml(posts));
-                  break;
-              case 'txt':
-                  res.send(posts.map(function(post) {
-                      return post.title+' ('+post.body+')';
-                  }).join('\n'));
-                  break;
-              default:
-                  console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
-                  res.send(406);
-            }
+              switch (format) { 
+                case 'html':
+                case 'htm':
+                    res.render('posts/index', {
+                      posts: posts,
+                      comments: comments,
+                      favorites: favorites
+                    });
+                    break;
+                case 'json':
+                    res.send(posts);
+                    break;
+                case 'xml':
+                    res.send(posts_to_xml(posts));
+                    break;
+                case 'txt':
+                    res.send(posts.map(function(post) {
+                        return post.title+' ('+post.body+')';
+                    }).join('\n'));
+                    break;
+                default:
+                    console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
+                    res.send(406);
+              }
+
+            })
+            .error(function(error){
+              next(error);
+            });
 
           })
           .error(function(error) {
