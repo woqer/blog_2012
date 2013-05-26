@@ -45,6 +45,12 @@ exports.index = function(req, res, next) {
 
     var format = req.params.format || 'html';
     format = format.toLowerCase();
+    var userId = '0';
+
+    if (req.session.user) {
+      console.log('======> Existe req.session');
+      userId = req.session.user.id;
+    }
 
     models.Post
         .findAll({order: 'updatedAt DESC',
@@ -57,9 +63,8 @@ exports.index = function(req, res, next) {
           models.Comment
           .findAll().success(function(comments) {
 
-            models.favorite
-            .findAll({where: {userID: req.session.user.id}
-            })
+            models.Favorite
+            .findAll({where: {userId: Number(userId)}})
             .success(function(favorites) {
           
               switch (format) { 

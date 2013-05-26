@@ -1,0 +1,51 @@
+<article>
+ <header>
+    <h3>
+      <a href='/posts/<%= posts[i].id %>' class='titlelink'> <%= posts[i].title %> </a>
+    </h3>
+    <em> <%= posts[i].author && posts[i].author.name || "Sin autor" %> </em>
+ </header>
+ 
+ <p>
+    <%= posts[i].body.slice(0,300) %> ... 
+ </p>
+
+ <footer>
+
+  Comentarios: 
+  
+  <% var numComments = 0; %>
+  <% for (var j in comments) { %>
+    <% if (comments[j].postId == posts[i].id) { %>
+        <% numComments++; %>
+    <% } %>
+  <% } %>
+
+  <%= numComments %>
+
+  <% if (session.user && session.user.id == posts[i].authorId) {%>
+
+    <form id='my_form' method='post' action='/posts/<%= posts[i].id %>'>
+      <input type='hidden' name='_method' value='delete'>
+      <a href="/posts/<%= posts[i].id %>/edit"> Editar </a> 
+      <a href=''
+      onclick="document.getElementById('my_form').submit();return false"> 
+      Borrar </a>  
+    </form>
+
+  <% } %>
+
+  <% if (favorites) { %>
+    <% var post = posts[i]; %>
+    <% var favorite; %>
+    <% for (var k in favorites) { %>
+      <% if (favorites[k].postId == post.id) { %>
+        <% favorite = favorites[k]; %>
+      <% } %>
+    <% } %>
+    <%- include _fav.ejs %>
+  <% } %>
+
+
+ </footer>
+</article>

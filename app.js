@@ -94,7 +94,7 @@ app.get('/', routes.index);
 app.param('postid', postController.load, favoritesController.load);
 app.param('userid', userController.load); //, favoritesController.load);
 app.param('commentid', commentController.load);
-//app.param('favoriteid', favoritesController.load);
+//app.param('posts', favoritesController.load);
 
 //---------------------
 
