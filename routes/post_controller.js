@@ -156,51 +156,59 @@ exports.show = function(req, res, next) {
             // Si encuentro al autor lo añado como el atributo author, sino añado {}.
             req.post.author = user || {};
 
-            // Buscar comentarios
-            models.Comment
-                 .findAll({where: {postId: req.post.id},
-                           order: 'updatedAt DESC',
-                           include: [ { model: models.User, as: 'Author' } ] 
-                 })
-                 .success(function(comments) {
+            // Buscar Adjuntos
+            req.post.getAttachments({order: 'updatedAt DESC'})
+               .success(function(attachments) {
+            
+                  // Buscar comentarios
+                  models.Comment
+                       .findAll({where: {postId: req.post.id},
+                                 order: 'updatedAt DESC',
+                                 include: [ { model: models.User, as: 'Author' } ] 
+                       })
+                       .success(function(comments) {
 
-                    var format = req.params.format || 'html';
-                    format = format.toLowerCase();
+                          var format = req.params.format || 'html';
+                          format = format.toLowerCase();
 
-                    switch (format) { 
-                      case 'html':
-                      case 'htm':
-                          var new_comment = models.Comment.build({
-                              body: 'Introduzca el texto del comentario'
-                          });
-                          console.log('======> ' +
-                            'Variable req.favorite: ' + req.favorite);
-                          res.render('posts/show', {
-                              post: req.post,
-                              comments: comments,
-                              comment: new_comment,
-                              numComments: numComments,
-                              favorite: req.favorite
-                          });
-                          break;
-                      case 'json':
-                          res.send(req.post);
-                          break;
-                      case 'xml':
-                          res.send(post_to_xml(req.post));
-                          break;
-                      case 'txt':
-                          res.send(req.post.title+' ('+req.post.body+')');
-                          break;
-                      default:
-                          console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
-                          res.send(406);
-                    }
-                 })
-                 .error(function(error) {
-                     next(error);
-                  });
-        })
+                          switch (format) { 
+                            case 'html':
+                            case 'htm':
+                                var new_comment = models.Comment.build({
+                                    body: 'Introduzca el texto del comentario'
+                                });
+                                res.render('posts/show', {
+                                    post: req.post,
+                                    comments: comments,
+                                    comment: new_comment,
+                                    attachments: attachments,
+                                    numComments: numComments,
+                                    favorite: req.favorite
+                                });
+                                break;
+                            case 'json':
+                                res.send(req.post);
+                                break;
+                            case 'xml':
+                                res.send(post_to_xml(req.post));
+                                break;
+                            case 'txt':
+                                res.send(req.post.title+' ('+req.post.body+')');
+                                break;
+                            default:
+                                console.log('No se soporta el formato \".'+format+'\" pedido para \"'+req.url+'\".');
+                                res.send(406);
+                          }
+                       })
+                       .error(function(error) {
+                           next(error);
+                       });
+                })
+               .error(function(error) {
+                   next(error);
+                });
+
+              })
         .error(function(error) {
             next(error);
         });
@@ -320,6 +328,8 @@ exports.destroy = function(req, res, next) {
     var Sequelize = require('sequelize');
     var chainer = new Sequelize.Utils.QueryChainer
 
+    var cloudinary = require('cloudinary');
+
     // Obtener los comentarios
     req.post.getComments()
        .success(function(comments) {
@@ -328,18 +338,47 @@ exports.destroy = function(req, res, next) {
                 chainer.add(comments[i].destroy());
            }
 
-           // Eliminar el post
-           chainer.add(req.post.destroy());
+           // Obtener los adjuntos
+           req.post.getAttachments()
+              .success(function(attachments) {
+                for (var i in attachments) {
+                        // Eliminar un adjunto
+                        chainer.add(attachments[i].destroy());
 
-           // Ejecutar el chainer
-           chainer.run()
-            .success(function(){
-                 req.flash('success', 'Post (y sus comentarios) eliminado con éxito.');
-                 res.redirect('/posts');
-            })
-            .error(function(errors){
-                next(errors[0]);   
-            })
+                        // Borrar el fichero en Cloudinary.
+                        cloudinary.api.delete_resources(attachments[i].public_id,
+                                      function(result) {},
+                                      {resource_type: 'raw'});
+                }
+
+                req.post.getFavorites()
+                .success(function(favorites) {
+                    for (var j in favorites) {
+                      chainer.add(favorites[j].destroy());
+                    }
+
+                    // Eliminar el post
+                    chainer.add(req.post.destroy());
+
+                    // Ejecutar el chainer
+                    chainer.run()
+                        .success(function(){
+                            req.flash('success', 'Post (y sus comentarios y adjuntos y marcas de favorito) eliminado con éxito.');
+                            res.redirect('/posts');
+                        })
+                        .error(function(errors){
+                            next(errors[0]);   
+                        });
+
+                })
+                .error(function(error){
+                  next(error);
+                });
+
+              })
+              .error(function(error) {
+                  next(error);
+              });
        })
        .error(function(error) {
            next(error);

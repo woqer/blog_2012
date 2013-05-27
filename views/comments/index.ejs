@@ -19,10 +19,10 @@
 
       <% if (session.user && session.user.id == comments[i].authorId) {%>
 
-        <form method='post' action='/posts/<%= post.id %>/comments/<%= comments[i].id %>'>
+        <form id='my_comment' method='post' action='/posts/<%= post.id %>/comments/<%= comments[i].id %>'>
           <input type='hidden' name='_method' value='delete'>
           <a href="/posts/<%= post.id %>/comments/<%= comments[i].id %>/edit"> Editar </a> 
-          <a href="" onclick="submit();return false"> Borrar </a>  
+          <a href="" onclick="document.getElementById('my_comment').submit();return false"> Borrar </a>  
         </form>
 
       <% } %>

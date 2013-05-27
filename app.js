@@ -12,6 +12,7 @@ var express = require('express')
   , postController = require('./routes/post_controller.js')
   , userController = require('./routes/user_controller.js')
   , commentController = require('./routes/comment_controller.js')
+  , attachmentController = require('./routes/attachment_controller.js')
   , caduca = require('./caduca.js')
   , count = require('./count.js')
   , favoritesController = require('./routes/favorites_controller.js');
@@ -66,12 +67,18 @@ app.use(function(err, req, res, next) {
   } 
 });
 
-
 if ('development' == app.get('env')) {
    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 } else {
    app.use(express.errorHandler());
 }
+
+/*
+process.on('uncaughtException', function (err) {
+  console.log('Caught exception: ' + err);
+});
+*/
+
 
 // Helper estatico:
 app.locals.escapeText =  function(text) {
@@ -94,13 +101,36 @@ app.get('/', routes.index);
 app.param('postid', postController.load, favoritesController.load);
 app.param('userid', userController.load); //, favoritesController.load);
 app.param('commentid', commentController.load);
-//app.param('posts', favoritesController.load);
+app.param('attachmentid', attachmentController.load);
 
 //---------------------
 
 app.get('/login',  sessionController.new);
 app.post('/login', sessionController.create);
 app.get('/logout', sessionController.destroy);
+
+//---------------------
+
+app.get('/posts/:postid([0-9]+)/attachments', 
+  attachmentController.index);
+
+app.get('/posts/:postid([0-9]+)/attachments/new', 
+  sessionController.requiresLogin,
+  postController.loggedUserIsAuthor,
+  attachmentController.new);
+
+app.post('/posts/:postid([0-9]+)/attachments', 
+   sessionController.requiresLogin,
+   postController.loggedUserIsAuthor,
+   attachmentController.create);
+
+app.delete('/posts/:postid([0-9]+)/attachments/:attachmentid([0-9]+)', 
+     sessionController.requiresLogin,
+     postController.loggedUserIsAuthor,
+     attachmentController.destroy);
+
+app.get('/raws', 
+  attachmentController.raws);
 
 //---------------------
 

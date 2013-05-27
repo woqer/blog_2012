@@ -8,8 +8,16 @@ var models = require('../models/models.js');
 exports.load = function(req, res, next, id) {
     var separador = '======> ';
     console.log (separador + 'favoriteController.load cargado');
+
+    var userId = '0';
+    if (req.session.user) {
+      console.log('======> Existe req.session.user');
+      userId = req.session.user.id;
+    }
+
    models.Favorite
-        .find({where: {postId: Number(id)}})
+        .find({where: {postId: Number(id),
+                        userId: userId}})
         .success(function(favorite) {
             console.log (separador + 'success del Favorite find');
             if (favorite) {

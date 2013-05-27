@@ -19,9 +19,11 @@ var sequelize = new Sequelize(process.env.DATABASE_NAME,
 //    - Post desde post.js.
 //    - User desde user.js.
 //    - Comment desde comment.js.
+//    - Attachment desde attachment.js.
 var Post = sequelize.import(path.join(__dirname,'post'));
 var User = sequelize.import(path.join(__dirname,'user'));
 var Comment = sequelize.import(path.join(__dirname,'comment'));
+var Attachment = sequelize.import(path.join(__dirname,'attachment'));
 var Favorite = sequelize.import(path.join(__dirname,'favorite'));
 
 // Relaciones
@@ -38,6 +40,7 @@ User.hasMany(Post, {foreignKey: 'authorId'});
 User.hasMany(Comment, {foreignKey: 'authorId'});
 Post.hasMany(Comment, {foreignKey: 'postId'});
 
+Post.hasMany(Attachment, {foreignKey: 'postId'});
 User.hasMany(Favorite, {foreignkey: 'userId'});
 Post.hasMany(Favorite, {foreignkey: 'postId'});
 
@@ -54,14 +57,15 @@ Post.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
 Comment.belongsTo(User, {as: 'Author', foreignKey: 'authorId'});
 Comment.belongsTo(Post, {foreignKey: 'postId'});
 
+Attachment.belongsTo(Post, {foreignKey: 'postId'});
 Favorite.belongsTo(User, {foreignkey: 'userId'});
 Favorite.belongsTo(Post, {foreignkey: 'postId'});
-
 
 // Exportar los modelos:
 exports.Post = Post;
 exports.User = User;
 exports.Comment = Comment;
+exports.Attachment = Attachment;
 exports.Favorite = Favorite;
 
 sequelize.sync(); //syncs database, it creates a new one if it doesn't exist

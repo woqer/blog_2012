@@ -12,6 +12,7 @@
     "pg": "0.6.x",
     "sequelize": "git+https://github.com/sequelize/sequelize.git",
     "connect-flash": "*",
+    "cloudinary": "",
     "xmlbuilder": "0.4.2"
   },
   "devDependencies": {
