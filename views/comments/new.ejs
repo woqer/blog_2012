@@ -1,0 +1,9 @@
+<div id="donde_estoy">Nuevo Comentario</div>
+
+<form method='post' action='/posts/<%= post.id %>/comments'>
+
+  <%- include _form.ejs %>
+
+</form>
+
+<A href="/posts/<%= post.id %>"> Cancelar </a>

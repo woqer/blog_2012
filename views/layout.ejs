@@ -3,29 +3,80 @@
 <head>
    <meta charset="utf-8">
    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+   <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400' rel='stylesheet' type='text/css'>
    <title>CORE</title>
 </head>
 
 <body>
   <header>
-    <h1> COmputación en REd - CORE</h1>
+    <h1> Blog SWCM</h1>
     <nav>
+
+      <div id='logininfo'>
+           <% if (session.user) { %>
+               <%= session.user.name %>
+               <a href='/logout'> Logout </a> 
+           <% } else { %>
+              <a href='/login?redir=/posts'> Login </a> 
+              <a href='/users/new'> Register </a> 
+           <% } %>
+      </div>
+
       <a href="/">Home</a>
-      <a href="/Posts">Posts</a>
+      <a href="/posts">Posts</a>
+      <a href="/users">Usuarios</a>
+      <a href="/about">About us</a>
+      <% if (session.user) { %>
+        <a href="/users/<%= session.user.id %>/favourites">Favoritos</a>
+      <% } %>
       <p>
         <form method='GET' action='/posts/search'>
-          <input type="text" id="post_search" 
-                  name="search" size='80' value='Busca...' />
-          <input name="commit" type="submit" value="Buscar" />
+          <input id="post_search" type="text" id="post_search" 
+                  name="search" size='80' placeholder="Busca..." />
+          <input id="button_search" name="commit" type="submit" value="Buscar" />
         </form>
       </p>
     </nav>
   </header>
+
+  <section>
+        <% var flash = flash() %>
+        <% if (flash.info) { %>
+           <article id='flashinfo'>
+             <h3>Información de interés:</h3>
+             <ul>
+                <% for (var i in flash.info) { %>
+                  <li> <%= flash.info[i] %> </li>
+                <% } %>
+             </ul>
+           </article>
+        <% } %>
+
+        <% if (flash.success) { %>
+           <article id='flashsuccess'>
+             <h3>Tareas completadas con éxito:</h3>
+             <ul>
+                <% for (var i in flash.success) { %>
+                   <li> <%= flash.success[i] %> </li>
+                <% } %>
+             </ul>
+           </article>
+        <% } %>
+
+        <% if (flash.error) { %>
+           <article id='flasherror'>
+             <h3>Errores encontrados:</h3>
+             <ul>
+                <% for (var i in flash.error) { %>
+                  <li> <%= flash.error[i] %> </li>
+                <% } %>
+             </ul>
+           </article>
+        <% } %>
+  </section>
        
   <section>
-   <hr />
    <%- body %>
-   <hr />
   </section>
 
   <footer>

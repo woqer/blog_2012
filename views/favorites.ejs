@@ -1,0 +1,18 @@
+<header>
+	<div id="donde_estoy"> Favoritos </div>
+</header>
+
+<% for (var k in favorites) { %>
+  <% for (var i in posts) { %>
+    <% if (favorites[k].postId == posts[i].id) { %>
+      
+      <%- include posts/_lista.ejs %>
+
+    <% } %>
+  <% } %>
+<%  } %>
+<footer>
+  <nav>
+    <a href="/posts/new"> Crear nuevo Post </a>
+  </nav>
+</footer>

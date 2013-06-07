@@ -1,0 +1,15 @@
+<% if (session.user) { %>
+  <% if (favorite) { %>
+  	<form method='post' action='/users/<%= session.user.id %>/favourites/<%= post.id %>'>
+  		<input type='hidden' name='_method' value='delete'>
+      <input type="image" name="favorito" src="/images/favorito.png" />
+  	</form>
+  <% } else { %>
+  	<form method='post' action='/users/<%= session.user.id %>/favourites/<%= post.id %>'>
+  		<input type='hidden' name='_method' value='put'>
+      <input type="image" name="favorito" src="/images/no_favorito.png" />
+      
+  		
+  	</form>
+  <% } %>
+<% } %>
